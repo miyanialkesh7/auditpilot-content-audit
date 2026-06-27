@@ -1,0 +1,629 @@
+# Copyright (C) 2026 Alkesh Miyani
+# This file is distributed under the same license as the Site Inspector plugin.
+# Alkesh Miyani <miyanialkesh7@gmail.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Site Inspector 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/site-inspector\n"
+"POT-Creation-Date: 2026-06-24T00:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2026-06-24T00:00:00+00:00\n"
+"Last-Translator: Alkesh Miyani <miyanialkesh7@gmail.com>\n"
+"Language-Team: English (United States) <miyanialkesh7@gmail.com>\n"
+"Language: en_US\n"
+"X-Domain: site-inspector\n"
+
+#. Plugin Name of the plugin
+#: site-inspector.php
+msgid "Site Inspector"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: site-inspector.php
+msgid "https://wordpress.org/plugins/site-inspector/"
+msgstr ""
+
+#. Description of the plugin
+#: site-inspector.php
+msgid "Audit, Inspect & Improve Every WordPress Content Type."
+msgstr ""
+
+#. Author of the plugin
+#: site-inspector.php
+msgid "Alkesh Miyani"
+msgstr ""
+
+#. Author URI of the plugin
+#: site-inspector.php
+msgid "https://miyanialkesh7.com"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Site Inspector"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Dashboard"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Scan Results"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Settings"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Error"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Warning"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Info"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Content"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Media"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Headings"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Links"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "SEO"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Builder"
+msgstr ""
+
+#: includes/class-admin.php admin/views/settings.php
+msgid "Content Audit"
+msgstr ""
+
+#: includes/class-admin.php admin/views/settings.php
+msgid "Media Audit"
+msgstr ""
+
+#: includes/class-admin.php admin/views/settings.php
+msgid "Heading Audit"
+msgstr ""
+
+#: includes/class-admin.php admin/views/settings.php
+msgid "Link Audit"
+msgstr ""
+
+#: includes/class-admin.php admin/views/settings.php
+msgid "SEO Audit"
+msgstr ""
+
+#: includes/class-admin.php admin/views/settings.php
+msgid "Builder Audit"
+msgstr ""
+
+#. Scan progress label shown in the browser while scanning
+#: includes/class-admin.php
+msgid "Scanning..."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Scan complete!"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "An error occurred during scanning."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Preparing scan..."
+msgstr ""
+
+#. %1$d = current post number, %2$d = total posts
+#: includes/class-admin.php
+#, php-format
+msgid "Scanning post %1$d of %2$d..."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Redirecting to results..."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Start New Scan"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Running"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Completed"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Pending"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Permission denied."
+msgstr ""
+
+#: includes/class-scanner.php
+msgid "No posts found to scan with current settings."
+msgstr ""
+
+#: includes/class-scanner.php
+msgid "Invalid scan parameters."
+msgstr ""
+
+#: includes/class-scanner.php
+msgid "Scan not found or already completed."
+msgstr ""
+
+#: includes/class-exporter.php
+msgid "Scan not found."
+msgstr ""
+
+#: includes/class-exporter.php
+msgid "Post ID"
+msgstr ""
+
+#: includes/class-exporter.php
+msgid "Post Title"
+msgstr ""
+
+#: includes/class-exporter.php
+msgid "Post Type"
+msgstr ""
+
+#: includes/class-exporter.php
+msgid "Post URL"
+msgstr ""
+
+#: includes/class-exporter.php
+msgid "Category"
+msgstr ""
+
+#: includes/class-exporter.php
+msgid "Issue Type"
+msgstr ""
+
+#: includes/class-exporter.php
+msgid "Severity"
+msgstr ""
+
+#: includes/class-exporter.php
+msgid "Message"
+msgstr ""
+
+#: includes/class-exporter.php
+msgid "Found At"
+msgstr ""
+
+#: includes/audits/class-content-audit.php
+msgid "Post has no content."
+msgstr ""
+
+#: includes/audits/class-content-audit.php
+msgid "Post is missing a featured image."
+msgstr ""
+
+#: includes/audits/class-content-audit.php
+msgid "Post is missing a manual excerpt."
+msgstr ""
+
+#. %1$d = actual word count, %2$d = minimum threshold
+#: includes/audits/class-content-audit.php
+#, php-format
+msgid "Content is short: %1$d words (minimum recommended: %2$d)."
+msgstr ""
+
+#. %d = number of days since last update
+#: includes/audits/class-content-audit.php
+#, php-format
+msgid "Draft has not been updated in %d days."
+msgstr ""
+
+#. %d = number of images missing alt text
+#: includes/audits/class-media-audit.php
+#, php-format
+msgid "%d image is missing alt text."
+msgid_plural "%d images are missing alt text."
+msgstr[0] ""
+msgstr[1] ""
+
+#. %d = attachment ID
+#: includes/audits/class-media-audit.php
+#, php-format
+msgid "Media reference (ID: %d) no longer exists."
+msgstr ""
+
+#. %d = attachment ID
+#: includes/audits/class-media-audit.php
+#, php-format
+msgid "Media file (ID: %d) is missing from the server."
+msgstr ""
+
+#. %1$s = image filename, %2$d = actual size in KB, %3$d = threshold in KB
+#: includes/audits/class-media-audit.php
+#, php-format
+msgid "Image \"%1$s\" is large (%2$d KB). Consider optimizing (recommended: under %3$d KB)."
+msgstr ""
+
+#. %d = number of H1 tags found
+#: includes/audits/class-heading-audit.php
+#, php-format
+msgid "Multiple H1 tags found (%d). Each page should have only one H1."
+msgstr ""
+
+#: includes/audits/class-heading-audit.php
+msgid "An H1 tag was found in the content. The page title is typically rendered as H1 by the theme; this may cause duplicate H1s."
+msgstr ""
+
+#. %1$d = heading level skipped from, %2$d = heading level skipped to
+#: includes/audits/class-heading-audit.php
+#, php-format
+msgid "Heading structure skips from H%1$d to H%2$d. Headings should not skip levels."
+msgstr ""
+
+#. %d = word count of the post
+#: includes/audits/class-heading-audit.php
+#, php-format
+msgid "Content has %d words but no subheadings (H2–H6). Add headings to improve readability."
+msgstr ""
+
+#. %d = number of empty or placeholder links
+#: includes/audits/class-link-audit.php
+#, php-format
+msgid "%d empty or placeholder link found."
+msgid_plural "%d empty or placeholder links found."
+msgstr[0] ""
+msgstr[1] ""
+
+#. %s = the broken URL
+#: includes/audits/class-link-audit.php
+#, php-format
+msgid "Broken internal link: %s"
+msgstr ""
+
+#. %1$s = URL, %2$d = HTTP status code
+#: includes/audits/class-link-audit.php
+#, php-format
+msgid "Broken external link (HTTP %2$d): %1$s"
+msgstr ""
+
+#. %1$s = URL, %2$d = HTTP status code
+#: includes/audits/class-link-audit.php
+#, php-format
+msgid "Redirecting link (HTTP %2$d): %1$s"
+msgstr ""
+
+#. %s = SEO plugin name (e.g. "Yoast SEO", "Rank Math")
+#: includes/audits/class-seo-audit.php
+#, php-format
+msgid "Missing SEO title in %s. A custom SEO title helps search engines understand the page."
+msgstr ""
+
+#. %s = SEO plugin name
+#: includes/audits/class-seo-audit.php
+#, php-format
+msgid "Missing meta description in %s. A meta description improves click-through rates in search results."
+msgstr ""
+
+#. %s = SEO plugin name
+#: includes/audits/class-seo-audit.php
+#, php-format
+msgid "Missing Open Graph image in %s."
+msgstr ""
+
+#: includes/audits/class-seo-audit.php
+msgid "No Open Graph image set. Consider adding a featured image or setting an OG image in your SEO plugin."
+msgstr ""
+
+#. Fallback label when no known SEO plugin is active
+#: includes/audits/class-seo-audit.php
+msgid "your SEO plugin"
+msgstr ""
+
+#. %d = number of empty blocks
+#: includes/audits/class-builder-audit.php
+#, php-format
+msgid "%d empty Gutenberg block found."
+msgid_plural "%d empty Gutenberg blocks found."
+msgstr[0] ""
+msgstr[1] ""
+
+#. %d = number of empty widgets
+#: includes/audits/class-builder-audit.php
+#, php-format
+msgid "%d empty Elementor widget found."
+msgid_plural "%d empty Elementor widgets found."
+msgstr[0] ""
+msgstr[1] ""
+
+#. %1$s = relative time (e.g. "2 hours"), %2$s = post count, %3$s = issue count
+#: admin/views/dashboard.php
+#, php-format
+msgid "Last scan completed %1$s — %2$s posts scanned, %3$s issues found."
+msgstr ""
+
+#. Appended after a relative time string, e.g. "2 hours ago"
+#: admin/views/dashboard.php admin/views/results.php
+msgid "ago"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "A scan is currently in progress."
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "No scans have been run yet. Start your first scan to audit your site content."
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "View Results"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Latest Scan Overview"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Overall"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Errors"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Warnings"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Posts with Issues"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Issues by Category"
+msgstr ""
+
+#. Lowercase badge label: "3 errors"
+#: admin/views/dashboard.php
+msgid "errors"
+msgstr ""
+
+#. Lowercase badge label: "2 warnings"
+#: admin/views/dashboard.php
+msgid "warnings"
+msgstr ""
+
+#. Lowercase badge label: "1 info"
+#: admin/views/dashboard.php
+msgid "info"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "View All Issues"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Export CSV"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "No scan results yet"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Run your first scan to discover content issues across your WordPress site."
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Recent Scans"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Date"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Posts Scanned"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Issues Found"
+msgstr ""
+
+#: admin/views/dashboard.php
+msgid "Status"
+msgstr ""
+
+#: admin/views/dashboard.php admin/views/results.php
+msgid "Actions"
+msgstr ""
+
+#. Back-navigation button label on results page
+#: admin/views/results.php
+msgid "← Dashboard"
+msgstr ""
+
+#: admin/views/results.php
+msgid "No scan results found. Please run a scan first."
+msgstr ""
+
+#: admin/views/results.php
+msgid "All Categories"
+msgstr ""
+
+#: admin/views/results.php
+msgid "All Severities"
+msgstr ""
+
+#: admin/views/results.php
+msgid "All Post Types"
+msgstr ""
+
+#: admin/views/results.php
+msgid "Filter"
+msgstr ""
+
+#: admin/views/results.php
+msgid "Reset"
+msgstr ""
+
+#: admin/views/results.php
+msgid "Search posts or messages..."
+msgstr ""
+
+#. %1$s = number of issues on this page, %2$s = total issues
+#: admin/views/results.php
+#, php-format
+msgid "Showing %1$s of %2$s issues"
+msgstr ""
+
+#: admin/views/results.php
+msgid "No issues found with the current filters."
+msgstr ""
+
+#. Table column heading for the post title
+#: admin/views/results.php
+msgid "Post"
+msgstr ""
+
+#. Table column heading for the issue description
+#: admin/views/results.php
+msgid "Issue"
+msgstr ""
+
+#. Fallback when post has no title
+#: admin/views/results.php
+msgid "(no title)"
+msgstr ""
+
+#: admin/views/results.php
+msgid "Edit"
+msgstr ""
+
+#: admin/views/results.php
+msgid "View"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Content to Scan"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Post Types"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Post Statuses"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Published"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Drafts"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Pending Review"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Private"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Audit Modules"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Enabled Audits"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Audit Thresholds"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Short Content Threshold"
+msgstr ""
+
+#. Unit label after the short content word count input
+#: admin/views/settings.php
+msgid "words"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Posts with fewer words than this will be flagged as short content."
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Old Draft Threshold"
+msgstr ""
+
+#. Unit label after the old draft days input
+#: admin/views/settings.php
+msgid "days"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Drafts not updated within this many days will be flagged."
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Large Image Threshold"
+msgstr ""
+
+#. Unit label after the large image KB input
+#: admin/views/settings.php
+msgid "KB"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Images larger than this size will be flagged for optimization."
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Link Checking"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "External Link Checking"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Check external links for broken URLs"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Warning: Enabling this significantly increases scan time as it makes HTTP requests to external URLs. Only enable on sites with few external links."
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Save Settings"
+msgstr ""
+
+#: admin/views/settings.php
+msgid "Settings saved."
+msgstr ""
