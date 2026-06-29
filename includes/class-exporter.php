@@ -3,15 +3,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class SI_Exporter {
+class CAWP_Exporter {
 
 	public static function export_csv( $scan_id ) {
-		$scan = SI_Database::get_scan( $scan_id );
+		$scan = CAWP_Database::get_scan( $scan_id );
 		if ( ! $scan ) {
-			wp_die( esc_html__( 'Scan not found.', 'site-inspector' ) );
+			wp_die( esc_html__( 'Scan not found.', 'wp-content-audit' ) );
 		}
 
-		$filename = 'site-inspector-scan-' . $scan_id . '-' . gmdate( 'Y-m-d' ) . '.csv';
+		$filename = 'wp-content-audit-scan-' . $scan_id . '-' . gmdate( 'Y-m-d' ) . '.csv';
 
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
@@ -27,18 +27,18 @@ class SI_Exporter {
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fputcsv
 		fputcsv( $output, array(
-			__( 'Post ID', 'site-inspector' ),
-			__( 'Post Title', 'site-inspector' ),
-			__( 'Post Type', 'site-inspector' ),
-			__( 'Post URL', 'site-inspector' ),
-			__( 'Category', 'site-inspector' ),
-			__( 'Issue Type', 'site-inspector' ),
-			__( 'Severity', 'site-inspector' ),
-			__( 'Message', 'site-inspector' ),
-			__( 'Found At', 'site-inspector' ),
+			__( 'Post ID', 'wp-content-audit' ),
+			__( 'Post Title', 'wp-content-audit' ),
+			__( 'Post Type', 'wp-content-audit' ),
+			__( 'Post URL', 'wp-content-audit' ),
+			__( 'Category', 'wp-content-audit' ),
+			__( 'Issue Type', 'wp-content-audit' ),
+			__( 'Severity', 'wp-content-audit' ),
+			__( 'Message', 'wp-content-audit' ),
+			__( 'Found At', 'wp-content-audit' ),
 		) );
 
-		$issues = SI_Database::get_all_issues_for_export( $scan_id );
+		$issues = CAWP_Database::get_all_issues_for_export( $scan_id );
 
 		foreach ( $issues as $issue ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fputcsv

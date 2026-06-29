@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class SI_Builder_Audit extends SI_Abstract_Audit {
+class CAWP_Builder_Audit extends CAWP_Abstract_Audit {
 
 	const CATEGORY = 'builder';
 
@@ -43,7 +43,7 @@ class SI_Builder_Audit extends SI_Abstract_Audit {
 						'%d empty Gutenberg block found.',
 						'%d empty Gutenberg blocks found.',
 						$count,
-						'site-inspector'
+						'wp-content-audit'
 					),
 					$count
 				),
@@ -123,7 +123,7 @@ class SI_Builder_Audit extends SI_Abstract_Audit {
 						'%d empty Elementor widget found.',
 						'%d empty Elementor widgets found.',
 						$empty_count,
-						'site-inspector'
+						'wp-content-audit'
 					),
 					$empty_count
 				),

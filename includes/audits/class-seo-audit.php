@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class SI_SEO_Audit extends SI_Abstract_Audit {
+class CAWP_SEO_Audit extends CAWP_Abstract_Audit {
 
 	const CATEGORY = 'seo';
 
@@ -61,7 +61,7 @@ class SI_SEO_Audit extends SI_Abstract_Audit {
 				'warning',
 				sprintf(
 					/* translators: SEO plugin name */
-					__( 'Missing SEO title in %s. A custom SEO title helps search engines understand the page.', 'site-inspector' ),
+					__( 'Missing SEO title in %s. A custom SEO title helps search engines understand the page.', 'wp-content-audit' ),
 					$plugin_name
 				),
 				array( 'plugin' => $this->active_plugin )
@@ -85,7 +85,7 @@ class SI_SEO_Audit extends SI_Abstract_Audit {
 				'warning',
 				sprintf(
 					/* translators: SEO plugin name */
-					__( 'Missing meta description in %s. A meta description improves click-through rates in search results.', 'site-inspector' ),
+					__( 'Missing meta description in %s. A meta description improves click-through rates in search results.', 'wp-content-audit' ),
 					$plugin_name
 				),
 				array( 'plugin' => $this->active_plugin )
@@ -103,7 +103,7 @@ class SI_SEO_Audit extends SI_Abstract_Audit {
 				return $this->issue(
 					'missing_og_image',
 					'info',
-					__( 'No Open Graph image set. Consider adding a featured image or setting an OG image in your SEO plugin.', 'site-inspector' )
+					__( 'No Open Graph image set. Consider adding a featured image or setting an OG image in your SEO plugin.', 'wp-content-audit' )
 				);
 			}
 			return null;
@@ -115,7 +115,7 @@ class SI_SEO_Audit extends SI_Abstract_Audit {
 				'info',
 				sprintf(
 					/* translators: SEO plugin name */
-					__( 'Missing Open Graph image in %s.', 'site-inspector' ),
+					__( 'Missing Open Graph image in %s.', 'wp-content-audit' ),
 					$this->get_plugin_display_name()
 				),
 				array( 'plugin' => $this->active_plugin )
@@ -180,7 +180,7 @@ class SI_SEO_Audit extends SI_Abstract_Audit {
 			'rankmath' => 'Rank Math',
 			'aioseo'   => 'AIOSEO',
 		);
-		return isset( $names[ $this->active_plugin ] ) ? $names[ $this->active_plugin ] : __( 'your SEO plugin', 'site-inspector' );
+		return isset( $names[ $this->active_plugin ] ) ? $names[ $this->active_plugin ] : __( 'your SEO plugin', 'wp-content-audit' );
 	}
 
 	public function get_active_plugin() {

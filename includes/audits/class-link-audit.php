@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class SI_Link_Audit extends SI_Abstract_Audit {
+class CAWP_Link_Audit extends CAWP_Abstract_Audit {
 
 	const CATEGORY = 'links';
 
@@ -62,7 +62,7 @@ class SI_Link_Audit extends SI_Abstract_Audit {
 						'%d empty or placeholder link found.',
 						'%d empty or placeholder links found.',
 						$count,
-						'site-inspector'
+						'wp-content-audit'
 					),
 					$count
 				),
@@ -108,7 +108,7 @@ class SI_Link_Audit extends SI_Abstract_Audit {
 				'error',
 				sprintf(
 					/* translators: URL */
-					__( 'Broken internal link: %s', 'site-inspector' ),
+					__( 'Broken internal link: %s', 'wp-content-audit' ),
 					esc_url( $url )
 				),
 				array( 'url' => $url )
@@ -153,7 +153,7 @@ class SI_Link_Audit extends SI_Abstract_Audit {
 					'error',
 					sprintf(
 						/* translators: 1: URL, 2: HTTP status code */
-						__( 'Broken external link (HTTP %2$d): %1$s', 'site-inspector' ),
+						__( 'Broken external link (HTTP %2$d): %1$s', 'wp-content-audit' ),
 						esc_url( $href ),
 						$status
 					),
@@ -165,7 +165,7 @@ class SI_Link_Audit extends SI_Abstract_Audit {
 					'info',
 					sprintf(
 						/* translators: 1: URL, 2: HTTP status code */
-						__( 'Redirecting link (HTTP %2$d): %1$s', 'site-inspector' ),
+						__( 'Redirecting link (HTTP %2$d): %1$s', 'wp-content-audit' ),
 						esc_url( $href ),
 						$status
 					),
@@ -211,7 +211,7 @@ class SI_Link_Audit extends SI_Abstract_Audit {
 
 		$response = wp_remote_head( $url, array(
 			'timeout'     => $timeout,
-			'user-agent'  => 'Mozilla/5.0 (compatible; SiteInspector/' . SITE_INSPECTOR_VERSION . ')',
+			'user-agent'  => 'Mozilla/5.0 (compatible; ContentAuditWP/' . CAWP_VERSION . ')',
 			'redirection' => 0,
 		) );
 

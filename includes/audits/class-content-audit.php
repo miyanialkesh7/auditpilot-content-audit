@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class SI_Content_Audit extends SI_Abstract_Audit {
+class CAWP_Content_Audit extends CAWP_Abstract_Audit {
 
 	const CATEGORY = 'content';
 
@@ -59,7 +59,7 @@ class SI_Content_Audit extends SI_Abstract_Audit {
 			return $this->issue(
 				'empty_content',
 				'error',
-				__( 'Post has no content.', 'site-inspector' )
+				__( 'Post has no content.', 'wp-content-audit' )
 			);
 		}
 
@@ -71,7 +71,7 @@ class SI_Content_Audit extends SI_Abstract_Audit {
 			return $this->issue(
 				'missing_featured_image',
 				'warning',
-				__( 'Post is missing a featured image.', 'site-inspector' )
+				__( 'Post is missing a featured image.', 'wp-content-audit' )
 			);
 		}
 
@@ -83,7 +83,7 @@ class SI_Content_Audit extends SI_Abstract_Audit {
 			return $this->issue(
 				'missing_excerpt',
 				'info',
-				__( 'Post is missing a manual excerpt.', 'site-inspector' )
+				__( 'Post is missing a manual excerpt.', 'wp-content-audit' )
 			);
 		}
 
@@ -106,7 +106,7 @@ class SI_Content_Audit extends SI_Abstract_Audit {
 				'warning',
 				sprintf(
 					/* translators: 1: word count, 2: threshold */
-					__( 'Content is short: %1$d words (minimum recommended: %2$d).', 'site-inspector' ),
+					__( 'Content is short: %1$d words (minimum recommended: %2$d).', 'wp-content-audit' ),
 					$word_count,
 					$threshold
 				),
@@ -133,7 +133,7 @@ class SI_Content_Audit extends SI_Abstract_Audit {
 				'info',
 				sprintf(
 					/* translators: 1: number of days old */
-					__( 'Draft has not been updated in %d days.', 'site-inspector' ),
+					__( 'Draft has not been updated in %d days.', 'wp-content-audit' ),
 					$days_old
 				),
 				array( 'days_old' => $days_old )

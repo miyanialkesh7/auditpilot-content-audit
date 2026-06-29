@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class SI_Database {
+class CAWP_Database {
 
 	const DB_VERSION = '1.0';
 
@@ -12,8 +12,8 @@ class SI_Database {
 
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$scans_table = $wpdb->prefix . 'si_scans';
-		$issues_table = $wpdb->prefix . 'si_issues';
+		$scans_table = $wpdb->prefix . 'cawp_scans';
+		$issues_table = $wpdb->prefix . 'cawp_issues';
 
 		$sql_scans = "CREATE TABLE $scans_table (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -52,14 +52,14 @@ class SI_Database {
 		dbDelta( $sql_scans );
 		dbDelta( $sql_issues );
 
-		update_option( 'site_inspector_db_version', self::DB_VERSION );
+		update_option( 'cawp_db_version', self::DB_VERSION );
 	}
 
 	public static function create_scan( $settings = array() ) {
 		global $wpdb;
 
 		$wpdb->insert(
-			$wpdb->prefix . 'si_scans',
+			$wpdb->prefix . 'cawp_scans',
 			array(
 				'status'     => 'running',
 				'settings'   => wp_json_encode( $settings ),
@@ -75,7 +75,7 @@ class SI_Database {
 		global $wpdb;
 
 		$wpdb->update(
-			$wpdb->prefix . 'si_scans',
+			$wpdb->prefix . 'cawp_scans',
 			$data,
 			array( 'id' => $scan_id ),
 			null,
@@ -87,7 +87,7 @@ class SI_Database {
 		global $wpdb;
 
 		return $wpdb->get_row(
-			$wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $wpdb->prefix . 'si_scans', $scan_id )
+			$wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $wpdb->prefix . 'cawp_scans', $scan_id )
 		);
 	}
 
@@ -95,7 +95,7 @@ class SI_Database {
 		global $wpdb;
 
 		return $wpdb->get_row(
-			$wpdb->prepare( 'SELECT * FROM %i ORDER BY id DESC LIMIT 1', $wpdb->prefix . 'si_scans' )
+			$wpdb->prepare( 'SELECT * FROM %i ORDER BY id DESC LIMIT 1', $wpdb->prefix . 'cawp_scans' )
 		);
 	}
 
@@ -104,7 +104,7 @@ class SI_Database {
 
 		return $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}si_scans ORDER BY id DESC LIMIT %d",
+				"SELECT * FROM {$wpdb->prefix}cawp_scans ORDER BY id DESC LIMIT %d",
 				$limit
 			)
 		);
@@ -114,7 +114,7 @@ class SI_Database {
 		global $wpdb;
 
 		$wpdb->insert(
-			$wpdb->prefix . 'si_issues',
+			$wpdb->prefix . 'cawp_issues',
 			array(
 				'scan_id'    => $scan_id,
 				'post_id'    => $post->ID,
@@ -136,7 +136,7 @@ class SI_Database {
 		global $wpdb;
 
 		$wpdb->delete(
-			$wpdb->prefix . 'si_issues',
+			$wpdb->prefix . 'cawp_issues',
 			array( 'scan_id' => $scan_id ),
 			array( '%d' )
 		);
@@ -166,7 +166,7 @@ class SI_Database {
 		$offset   = ( max( 1, (int) $args['page'] ) - 1 ) * (int) $args['per_page'];
 		$per_page = (int) $args['per_page'];
 
-		$table        = $wpdb->prefix . 'si_issues';
+		$table        = $wpdb->prefix . 'cawp_issues';
 		$where_sql    = 'scan_id = %d';
 		$where_params = array( $scan_id );
 
@@ -226,7 +226,7 @@ class SI_Database {
 
 		$by_severity = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT severity, COUNT(*) as count FROM {$wpdb->prefix}si_issues WHERE scan_id = %d GROUP BY severity",
+				"SELECT severity, COUNT(*) as count FROM {$wpdb->prefix}cawp_issues WHERE scan_id = %d GROUP BY severity",
 				$scan_id
 			),
 			OBJECT_K
@@ -234,21 +234,21 @@ class SI_Database {
 
 		$by_category = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT category, severity, COUNT(*) as count FROM {$wpdb->prefix}si_issues WHERE scan_id = %d GROUP BY category, severity",
+				"SELECT category, severity, COUNT(*) as count FROM {$wpdb->prefix}cawp_issues WHERE scan_id = %d GROUP BY category, severity",
 				$scan_id
 			)
 		);
 
 		$by_post_type = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT post_type, COUNT(DISTINCT post_id) as post_count, COUNT(*) as issue_count FROM {$wpdb->prefix}si_issues WHERE scan_id = %d GROUP BY post_type",
+				"SELECT post_type, COUNT(DISTINCT post_id) as post_count, COUNT(*) as issue_count FROM {$wpdb->prefix}cawp_issues WHERE scan_id = %d GROUP BY post_type",
 				$scan_id
 			)
 		);
 
 		$posts_with_issues = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(DISTINCT post_id) FROM {$wpdb->prefix}si_issues WHERE scan_id = %d",
+				"SELECT COUNT(DISTINCT post_id) FROM {$wpdb->prefix}cawp_issues WHERE scan_id = %d",
 				$scan_id
 			)
 		);
@@ -286,7 +286,7 @@ class SI_Database {
 		foreach ( $categories as $category ) {
 			$rows = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT severity, COUNT(*) as cnt FROM {$wpdb->prefix}si_issues WHERE scan_id = %d AND category = %s GROUP BY severity",
+					"SELECT severity, COUNT(*) as cnt FROM {$wpdb->prefix}cawp_issues WHERE scan_id = %d AND category = %s GROUP BY severity",
 					$scan_id,
 					$category
 				)
@@ -316,7 +316,7 @@ class SI_Database {
 
 		return $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}si_issues WHERE scan_id = %d ORDER BY post_title ASC, category ASC",
+				"SELECT * FROM {$wpdb->prefix}cawp_issues WHERE scan_id = %d ORDER BY post_title ASC, category ASC",
 				$scan_id
 			)
 		);

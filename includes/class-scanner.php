@@ -3,19 +3,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class SI_Scanner {
+class CAWP_Scanner {
 
 	public function __construct() {
-		add_action( 'wp_ajax_si_start_scan', array( $this, 'ajax_start_scan' ) );
-		add_action( 'wp_ajax_si_scan_batch', array( $this, 'ajax_scan_batch' ) );
-		add_action( 'wp_ajax_si_get_scan_status', array( $this, 'ajax_get_scan_status' ) );
+		add_action( 'wp_ajax_cawp_start_scan', array( $this, 'ajax_start_scan' ) );
+		add_action( 'wp_ajax_cawp_scan_batch', array( $this, 'ajax_scan_batch' ) );
+		add_action( 'wp_ajax_cawp_get_scan_status', array( $this, 'ajax_get_scan_status' ) );
 	}
 
 	public function ajax_start_scan() {
-		check_ajax_referer( 'si_scan_nonce', 'nonce' );
+		check_ajax_referer( 'cawp_scan_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'site-inspector' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'wp-content-audit' ) ) );
 		}
 
 		$settings = $this->get_settings();
@@ -23,12 +23,12 @@ class SI_Scanner {
 		$post_ids = $this->get_posts_to_scan( $settings );
 
 		if ( empty( $post_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No posts found to scan with current settings.', 'site-inspector' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No posts found to scan with current settings.', 'wp-content-audit' ) ) );
 		}
 
-		$scan_id = SI_Database::create_scan( $settings );
+		$scan_id = CAWP_Database::create_scan( $settings );
 
-		SI_Database::update_scan( $scan_id, array(
+		CAWP_Database::update_scan( $scan_id, array(
 			'total_posts'  => count( $post_ids ),
 			'status'       => 'running',
 		) );
@@ -41,22 +41,22 @@ class SI_Scanner {
 	}
 
 	public function ajax_scan_batch() {
-		check_ajax_referer( 'si_scan_nonce', 'nonce' );
+		check_ajax_referer( 'cawp_scan_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'site-inspector' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'wp-content-audit' ) ) );
 		}
 
 		$scan_id  = isset( $_POST['scan_id'] ) ? (int) $_POST['scan_id'] : 0;
 		$post_ids = isset( $_POST['post_ids'] ) ? array_map( 'intval', (array) $_POST['post_ids'] ) : array();
 
 		if ( ! $scan_id || empty( $post_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid scan parameters.', 'site-inspector' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid scan parameters.', 'wp-content-audit' ) ) );
 		}
 
-		$scan = SI_Database::get_scan( $scan_id );
+		$scan = CAWP_Database::get_scan( $scan_id );
 		if ( ! $scan || 'running' !== $scan->status ) {
-			wp_send_json_error( array( 'message' => __( 'Scan not found or already completed.', 'site-inspector' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Scan not found or already completed.', 'wp-content-audit' ) ) );
 		}
 
 		$settings      = json_decode( $scan->settings, true ) ?: array();
@@ -77,7 +77,7 @@ class SI_Scanner {
 			}
 
 			foreach ( $post_issues as $issue ) {
-				SI_Database::insert_issue( $scan_id, $post, $issue );
+				CAWP_Database::insert_issue( $scan_id, $post, $issue );
 				$issues_found++;
 			}
 
@@ -86,7 +86,7 @@ class SI_Scanner {
 
 		global $wpdb;
 		$wpdb->query( $wpdb->prepare(
-			"UPDATE {$wpdb->prefix}si_scans SET scanned_posts = scanned_posts + %d, issues_found = issues_found + %d WHERE id = %d",
+			"UPDATE {$wpdb->prefix}cawp_scans SET scanned_posts = scanned_posts + %d, issues_found = issues_found + %d WHERE id = %d",
 			$scanned_count,
 			$issues_found,
 			$scan_id
@@ -99,7 +99,7 @@ class SI_Scanner {
 	}
 
 	public function ajax_get_scan_status() {
-		check_ajax_referer( 'si_scan_nonce', 'nonce' );
+		check_ajax_referer( 'cawp_scan_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error();
@@ -111,7 +111,7 @@ class SI_Scanner {
 			wp_send_json_error();
 		}
 
-		$scan = SI_Database::get_scan( $scan_id );
+		$scan = CAWP_Database::get_scan( $scan_id );
 		if ( ! $scan ) {
 			wp_send_json_error();
 		}
@@ -119,7 +119,7 @@ class SI_Scanner {
 		$is_complete = isset( $_POST['complete'] ) && '1' === $_POST['complete'];
 
 		if ( $is_complete && 'running' === $scan->status ) {
-			SI_Database::update_scan( $scan_id, array(
+			CAWP_Database::update_scan( $scan_id, array(
 				'status'       => 'completed',
 				'completed_at' => current_time( 'mysql' ),
 			) );
@@ -129,7 +129,7 @@ class SI_Scanner {
 
 		wp_send_json_success( array(
 			'scan'    => $scan,
-			'results_url' => admin_url( 'admin.php?page=site-inspector-results&scan_id=' . $scan_id ),
+			'results_url' => admin_url( 'admin.php?page=wp-content-audit-results&scan_id=' . $scan_id ),
 		) );
 	}
 
@@ -168,34 +168,34 @@ class SI_Scanner {
 		$audits = array();
 
 		if ( in_array( 'content', $enabled, true ) ) {
-			$audits[] = new SI_Content_Audit( $settings );
+			$audits[] = new CAWP_Content_Audit( $settings );
 		}
 
 		if ( in_array( 'media', $enabled, true ) ) {
-			$audits[] = new SI_Media_Audit( $settings );
+			$audits[] = new CAWP_Media_Audit( $settings );
 		}
 
 		if ( in_array( 'headings', $enabled, true ) ) {
-			$audits[] = new SI_Heading_Audit();
+			$audits[] = new CAWP_Heading_Audit();
 		}
 
 		if ( in_array( 'links', $enabled, true ) ) {
-			$audits[] = new SI_Link_Audit( $settings );
+			$audits[] = new CAWP_Link_Audit( $settings );
 		}
 
 		if ( in_array( 'seo', $enabled, true ) ) {
-			$audits[] = new SI_SEO_Audit();
+			$audits[] = new CAWP_SEO_Audit();
 		}
 
 		if ( in_array( 'builder', $enabled, true ) ) {
-			$audits[] = new SI_Builder_Audit();
+			$audits[] = new CAWP_Builder_Audit();
 		}
 
 		return $audits;
 	}
 
 	private function get_settings() {
-		$saved = get_option( 'site_inspector_settings', array() );
+		$saved = get_option( 'cawp_settings', array() );
 
 		return wp_parse_args( $saved, array(
 			'post_types'             => array( 'post', 'page' ),

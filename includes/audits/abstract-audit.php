@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-abstract class SI_Abstract_Audit {
+abstract class CAWP_Abstract_Audit {
 
 	abstract public function run( $post );
 

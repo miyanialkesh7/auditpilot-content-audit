@@ -1,4 +1,4 @@
-=== Site Inspector ===
+=== Content Audit for WordPress ===
 Contributors: alkesh7
 Tags: content audit, seo audit, broken links, alt text, site audit
 Requires at least: 6.8
@@ -12,9 +12,9 @@ Audit every page, post, and custom post type from one dashboard. Find broken lin
 
 == Description ==
 
-**Site Inspector is the all-in-one content quality plugin for WordPress.** It scans your entire site and surfaces issues that hurt your SEO, user experience, and content quality — all from a single, easy-to-read dashboard.
+**Content Audit for WordPress is the all-in-one content quality plugin for WordPress.** It scans your entire site and surfaces issues that hurt your SEO, user experience, and content quality — all from a single, easy-to-read dashboard.
 
-Stop discovering problems when visitors — or Google — do. Site Inspector finds them first.
+Stop discovering problems when visitors — or Google — do. Content Audit for WordPress finds them first.
 
 ---
 
@@ -112,7 +112,7 @@ Export your full results to a CSV file and share with clients, teammates, or use
 
 ### 👩‍💻 Developer Friendly
 
-Site Inspector is built with clean, extensible code and follows WordPress coding standards throughout.
+Content Audit for WordPress is built with clean, extensible code and follows WordPress coding standards throughout.
 
 * Custom database tables for scalable result storage
 * AJAX-based scanning — no page timeouts
@@ -124,7 +124,7 @@ Site Inspector is built with clean, extensible code and follows WordPress coding
 
 ### 🔒 Privacy
 
-Site Inspector only reads your existing WordPress content. It does not send any data to external servers. External link checking (when enabled) makes standard HTTP HEAD requests directly from your server to verify link status — no third-party service is involved.
+This plugin only reads your existing WordPress content. It does not send any data to external servers. External link checking (when enabled) makes standard HTTP HEAD requests directly from your server to verify link status — no third-party service is involved.
 
 ---
 
@@ -140,7 +140,7 @@ Site Inspector only reads your existing WordPress content. It does not send any 
 
 1. Log in to your WordPress dashboard
 2. Go to **Plugins → Add New Plugin**
-3. Search for **Site Inspector**
+3. Search for **Content Audit for WordPress**
 4. Click **Install Now**, then **Activate**
 
 **Manual Installation**
@@ -151,13 +151,13 @@ Site Inspector only reads your existing WordPress content. It does not send any 
 
 **First Scan**
 
-1. After activation, go to **Site Inspector** in the admin menu
+1. After activation, go to **Content Audit** in the admin menu
 2. Click **Start New Scan**
 3. Watch the progress bar — results appear automatically when the scan finishes
 
 == Frequently Asked Questions ==
 
-= Will Site Inspector slow down my website for visitors? =
+= Will this plugin slow down my website for visitors? =
 
 No. All scanning happens in the WordPress admin via background AJAX requests. Your front end is completely unaffected.
 
@@ -187,7 +187,7 @@ The plugin is network-compatible but operates per-site. Multisite network-wide s
 
 = Where are scan results stored? =
 
-Results are stored in two custom database tables (`wp_si_scans` and `wp_si_issues`) in your own WordPress database. Nothing leaves your server.
+Results are stored in two custom database tables (`wp_cawp_scans` and `wp_cawp_issues`) in your own WordPress database. Nothing leaves your server.
 
 = How do I delete all plugin data? =
 
@@ -213,4 +213,4 @@ Yes. The plugin is fully internationalized and ships with a `.pot` template file
 == Upgrade Notice ==
 
 = 1.0.0 =
-First release of Site Inspector. Install and run your first scan to discover content issues across your site.
+First release of Content Audit for WordPress. Install and run your first scan to discover content issues across your site.

@@ -1,11 +1,11 @@
 # Copyright (C) 2026 Alkesh Miyani
-# This file is distributed under the same license as the Site Inspector plugin.
+# This file is distributed under the same license as the Content Audit for WordPress plugin.
 # Alkesh Miyani <miyanialkesh7@gmail.com>, 2026.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Site Inspector 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/site-inspector\n"
+"Project-Id-Version: Content Audit for WordPress 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-content-audit\n"
 "POT-Creation-Date: 2026-06-24T00:00:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14,35 +14,35 @@ msgstr ""
 "Last-Translator: Alkesh Miyani <miyanialkesh7@gmail.com>\n"
 "Language-Team: English (United States) <miyanialkesh7@gmail.com>\n"
 "Language: en_US\n"
-"X-Domain: site-inspector\n"
+"X-Domain: wp-content-audit\n"
 
 #. Plugin Name of the plugin
-#: site-inspector.php
-msgid "Site Inspector"
+#: wp-content-audit.php
+msgid "Content Audit for WordPress"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: site-inspector.php
-msgid "https://wordpress.org/plugins/site-inspector/"
+#: wp-content-audit.php
+msgid "https://wordpress.org/plugins/wp-content-audit/"
 msgstr ""
 
 #. Description of the plugin
-#: site-inspector.php
+#: wp-content-audit.php
 msgid "Audit, Inspect & Improve Every WordPress Content Type."
 msgstr ""
 
 #. Author of the plugin
-#: site-inspector.php
+#: wp-content-audit.php
 msgid "Alkesh Miyani"
 msgstr ""
 
 #. Author URI of the plugin
-#: site-inspector.php
+#: wp-content-audit.php
 msgid "https://miyanialkesh7.com"
 msgstr ""
 
 #: includes/class-admin.php
-msgid "Site Inspector"
+msgid "Content Audit"
 msgstr ""
 
 #: includes/class-admin.php
