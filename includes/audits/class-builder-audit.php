@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAWP_Builder_Audit extends CAWP_Abstract_Audit {
+class APCA_Builder_Audit extends APCA_Abstract_Audit {
 
 	const CATEGORY = 'builder';
 
@@ -39,11 +39,12 @@ class CAWP_Builder_Audit extends CAWP_Abstract_Audit {
 				'empty_gutenberg_block',
 				'info',
 				sprintf(
+					/* translators: %d: number of empty Gutenberg blocks found */
 					_n(
 						'%d empty Gutenberg block found.',
 						'%d empty Gutenberg blocks found.',
 						$count,
-						'wp-content-audit'
+						'auditpilot-content-audit'
 					),
 					$count
 				),
@@ -119,11 +120,12 @@ class CAWP_Builder_Audit extends CAWP_Abstract_Audit {
 				'empty_elementor_widget',
 				'info',
 				sprintf(
+					/* translators: %d: number of empty Elementor widgets found */
 					_n(
 						'%d empty Elementor widget found.',
 						'%d empty Elementor widgets found.',
 						$empty_count,
-						'wp-content-audit'
+						'auditpilot-content-audit'
 					),
 					$empty_count
 				),

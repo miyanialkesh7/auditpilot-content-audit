@@ -1,19 +1,36 @@
 <?php
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- All methods in this class operate on custom plugin tables. There is no WordPress API equivalent; direct queries are required. Caching is intentionally omitted for write paths and scan results, which change frequently during active scans.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAWP_Database {
+class APCA_Database {
 
 	const DB_VERSION = '1.0';
+
+	public static function drop_tables() {
+		global $wpdb;
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}apca_issues" );
+		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}apca_scans" );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.SchemaChange
+		delete_option( 'apca_db_version' );
+	}
+
+	public static function maybe_drop_tables() {
+		$settings = get_option( 'apca_settings', array() );
+		if ( ! empty( $settings['delete_on_deactivation'] ) ) {
+			self::drop_tables();
+		}
+	}
 
 	public static function create_tables() {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$scans_table = $wpdb->prefix . 'cawp_scans';
-		$issues_table = $wpdb->prefix . 'cawp_issues';
+		$scans_table = $wpdb->prefix . 'apca_scans';
+		$issues_table = $wpdb->prefix . 'apca_issues';
 
 		$sql_scans = "CREATE TABLE $scans_table (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -52,14 +69,14 @@ class CAWP_Database {
 		dbDelta( $sql_scans );
 		dbDelta( $sql_issues );
 
-		update_option( 'cawp_db_version', self::DB_VERSION );
+		update_option( 'apca_db_version', self::DB_VERSION );
 	}
 
 	public static function create_scan( $settings = array() ) {
 		global $wpdb;
 
 		$wpdb->insert(
-			$wpdb->prefix . 'cawp_scans',
+			$wpdb->prefix . 'apca_scans',
 			array(
 				'status'     => 'running',
 				'settings'   => wp_json_encode( $settings ),
@@ -75,7 +92,7 @@ class CAWP_Database {
 		global $wpdb;
 
 		$wpdb->update(
-			$wpdb->prefix . 'cawp_scans',
+			$wpdb->prefix . 'apca_scans',
 			$data,
 			array( 'id' => $scan_id ),
 			null,
@@ -87,7 +104,7 @@ class CAWP_Database {
 		global $wpdb;
 
 		return $wpdb->get_row(
-			$wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $wpdb->prefix . 'cawp_scans', $scan_id )
+			$wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $wpdb->prefix . 'apca_scans', $scan_id )
 		);
 	}
 
@@ -95,7 +112,7 @@ class CAWP_Database {
 		global $wpdb;
 
 		return $wpdb->get_row(
-			$wpdb->prepare( 'SELECT * FROM %i ORDER BY id DESC LIMIT 1', $wpdb->prefix . 'cawp_scans' )
+			$wpdb->prepare( 'SELECT * FROM %i ORDER BY id DESC LIMIT 1', $wpdb->prefix . 'apca_scans' )
 		);
 	}
 
@@ -104,7 +121,7 @@ class CAWP_Database {
 
 		return $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}cawp_scans ORDER BY id DESC LIMIT %d",
+				"SELECT * FROM {$wpdb->prefix}apca_scans ORDER BY id DESC LIMIT %d",
 				$limit
 			)
 		);
@@ -114,7 +131,7 @@ class CAWP_Database {
 		global $wpdb;
 
 		$wpdb->insert(
-			$wpdb->prefix . 'cawp_issues',
+			$wpdb->prefix . 'apca_issues',
 			array(
 				'scan_id'    => $scan_id,
 				'post_id'    => $post->ID,
@@ -136,7 +153,7 @@ class CAWP_Database {
 		global $wpdb;
 
 		$wpdb->delete(
-			$wpdb->prefix . 'cawp_issues',
+			$wpdb->prefix . 'apca_issues',
 			array( 'scan_id' => $scan_id ),
 			array( '%d' )
 		);
@@ -166,7 +183,7 @@ class CAWP_Database {
 		$offset   = ( max( 1, (int) $args['page'] ) - 1 ) * (int) $args['per_page'];
 		$per_page = (int) $args['per_page'];
 
-		$table        = $wpdb->prefix . 'cawp_issues';
+		$table        = $wpdb->prefix . 'apca_issues';
 		$where_sql    = 'scan_id = %d';
 		$where_params = array( $scan_id );
 
@@ -197,8 +214,9 @@ class CAWP_Database {
 			$where_params[] = $like;
 		}
 
-		// $where_sql is built solely from hardcoded fragments + wpdb placeholders; $order is allowlist-validated.
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// $where_sql is composed entirely of hardcoded string fragments + wpdb placeholders — no user input is interpolated directly.
+		// $order is validated against an allowlist above. The sniffs below are false positives for this pattern.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM %i WHERE {$where_sql} ORDER BY %i {$order} LIMIT %d OFFSET %d",
@@ -206,13 +224,13 @@ class CAWP_Database {
 			)
 		);
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$total = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM %i WHERE {$where_sql}",
 				array_merge( array( $table ), $where_params )
 			)
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		return array(
 			'items' => $results,
@@ -226,7 +244,7 @@ class CAWP_Database {
 
 		$by_severity = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT severity, COUNT(*) as count FROM {$wpdb->prefix}cawp_issues WHERE scan_id = %d GROUP BY severity",
+				"SELECT severity, COUNT(*) as count FROM {$wpdb->prefix}apca_issues WHERE scan_id = %d GROUP BY severity",
 				$scan_id
 			),
 			OBJECT_K
@@ -234,21 +252,21 @@ class CAWP_Database {
 
 		$by_category = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT category, severity, COUNT(*) as count FROM {$wpdb->prefix}cawp_issues WHERE scan_id = %d GROUP BY category, severity",
+				"SELECT category, severity, COUNT(*) as count FROM {$wpdb->prefix}apca_issues WHERE scan_id = %d GROUP BY category, severity",
 				$scan_id
 			)
 		);
 
 		$by_post_type = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT post_type, COUNT(DISTINCT post_id) as post_count, COUNT(*) as issue_count FROM {$wpdb->prefix}cawp_issues WHERE scan_id = %d GROUP BY post_type",
+				"SELECT post_type, COUNT(DISTINCT post_id) as post_count, COUNT(*) as issue_count FROM {$wpdb->prefix}apca_issues WHERE scan_id = %d GROUP BY post_type",
 				$scan_id
 			)
 		);
 
 		$posts_with_issues = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(DISTINCT post_id) FROM {$wpdb->prefix}cawp_issues WHERE scan_id = %d",
+				"SELECT COUNT(DISTINCT post_id) FROM {$wpdb->prefix}apca_issues WHERE scan_id = %d",
 				$scan_id
 			)
 		);
@@ -286,7 +304,7 @@ class CAWP_Database {
 		foreach ( $categories as $category ) {
 			$rows = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT severity, COUNT(*) as cnt FROM {$wpdb->prefix}cawp_issues WHERE scan_id = %d AND category = %s GROUP BY severity",
+					"SELECT severity, COUNT(*) as cnt FROM {$wpdb->prefix}apca_issues WHERE scan_id = %d AND category = %s GROUP BY severity",
 					$scan_id,
 					$category
 				)
@@ -316,7 +334,7 @@ class CAWP_Database {
 
 		return $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}cawp_issues WHERE scan_id = %d ORDER BY post_title ASC, category ASC",
+				"SELECT * FROM {$wpdb->prefix}apca_issues WHERE scan_id = %d ORDER BY post_title ASC, category ASC",
 				$scan_id
 			)
 		);

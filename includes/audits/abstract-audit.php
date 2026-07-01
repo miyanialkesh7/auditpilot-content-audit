@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-abstract class CAWP_Abstract_Audit {
+abstract class APCA_Abstract_Audit {
 
 	abstract public function run( $post );
 
@@ -80,8 +80,8 @@ abstract class CAWP_Abstract_Audit {
 
 	protected function is_url_internal( $url ) {
 		$home = home_url();
-		$parsed_home = parse_url( $home );
-		$parsed_url  = parse_url( $url );
+		$parsed_home = wp_parse_url( $home );
+		$parsed_url  = wp_parse_url( $url );
 
 		if ( empty( $parsed_url['host'] ) ) {
 			return true;

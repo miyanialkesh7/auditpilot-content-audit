@@ -3,132 +3,133 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAWP_Admin {
+class APCA_Admin {
 
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'admin_init', array( $this, 'handle_export' ) );
 		add_action( 'admin_init', array( $this, 'save_settings' ) );
-		add_filter( 'plugin_action_links_' . CAWP_BASENAME, array( $this, 'add_plugin_links' ) );
+		add_filter( 'plugin_action_links_' . APCA_BASENAME, array( $this, 'add_plugin_links' ) );
 	}
 
 	public function add_menu_pages() {
 		add_menu_page(
-			__( 'Content Audit', 'wp-content-audit' ),
-			__( 'Content Audit', 'wp-content-audit' ),
+			__( 'AuditPilot', 'auditpilot-content-audit' ),
+			__( 'AuditPilot', 'auditpilot-content-audit' ),
 			'manage_options',
-			'wp-content-audit',
+			'auditpilot-content-audit',
 			array( $this, 'render_dashboard' ),
 			'dashicons-search',
 			80
 		);
 
 		add_submenu_page(
-			'wp-content-audit',
-			__( 'Dashboard', 'wp-content-audit' ),
-			__( 'Dashboard', 'wp-content-audit' ),
+			'auditpilot-content-audit',
+			__( 'Dashboard', 'auditpilot-content-audit' ),
+			__( 'Dashboard', 'auditpilot-content-audit' ),
 			'manage_options',
-			'wp-content-audit',
+			'auditpilot-content-audit',
 			array( $this, 'render_dashboard' )
 		);
 
 		add_submenu_page(
-			'wp-content-audit',
-			__( 'Scan Results', 'wp-content-audit' ),
-			__( 'Scan Results', 'wp-content-audit' ),
+			'auditpilot-content-audit',
+			__( 'Scan Results', 'auditpilot-content-audit' ),
+			__( 'Scan Results', 'auditpilot-content-audit' ),
 			'manage_options',
-			'wp-content-audit-results',
+			'auditpilot-content-audit-results',
 			array( $this, 'render_results' )
 		);
 
 		add_submenu_page(
-			'wp-content-audit',
-			__( 'Settings', 'wp-content-audit' ),
-			__( 'Settings', 'wp-content-audit' ),
+			'auditpilot-content-audit',
+			__( 'Settings', 'auditpilot-content-audit' ),
+			__( 'Settings', 'auditpilot-content-audit' ),
 			'manage_options',
-			'wp-content-audit-settings',
+			'auditpilot-content-audit-settings',
 			array( $this, 'render_settings' )
 		);
 	}
 
 	public function enqueue_assets( $hook ) {
-		$cawp_pages = array(
-			'toplevel_page_wp-content-audit',
-			'wp-content-audit_page_wp-content-audit-results',
-			'wp-content-audit_page_wp-content-audit-settings',
+		$apca_pages = array(
+			'toplevel_page_auditpilot-content-audit',
+			'auditpilot-content-audit_page_auditpilot-content-audit-results',
+			'auditpilot-content-audit_page_auditpilot-content-audit-settings',
 		);
 
-		if ( ! in_array( $hook, $cawp_pages, true ) ) {
+		if ( ! in_array( $hook, $apca_pages, true ) ) {
 			return;
 		}
 
 		wp_enqueue_style(
-			'cawp-admin',
-			CAWP_URL . 'admin/css/admin.css',
+			'apca-admin',
+			APCA_URL . 'admin/css/admin.css',
 			array(),
-			CAWP_VERSION
+			APCA_VERSION
 		);
 
 		wp_enqueue_script(
-			'cawp-admin',
-			CAWP_URL . 'admin/js/admin.js',
+			'apca-admin',
+			APCA_URL . 'admin/js/admin.js',
 			array( 'jquery' ),
-			CAWP_VERSION,
+			APCA_VERSION,
 			true
 		);
 
-		wp_localize_script( 'cawp-admin', 'cawpData', array(
+		wp_localize_script( 'apca-admin', 'apcaData', array(
 			'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
-			'nonce'    => wp_create_nonce( 'cawp_scan_nonce' ),
+			'nonce'    => wp_create_nonce( 'apca_scan_nonce' ),
 			'batchSize' => 10,
 			'i18n'     => array(
-				'scanning'    => __( 'Scanning...', 'wp-content-audit' ),
-				'complete'    => __( 'Scan complete!', 'wp-content-audit' ),
-				'error'       => __( 'An error occurred during scanning.', 'wp-content-audit' ),
-				'starting'    => __( 'Preparing scan...', 'wp-content-audit' ),
-				'progress'    => __( 'Scanning post %1$d of %2$d...', 'wp-content-audit' ),
-				'redirecting' => __( 'Redirecting to results...', 'wp-content-audit' ),
-				'startScan'   => __( 'Start New Scan', 'wp-content-audit' ),
+				'scanning'    => __( 'Scanning...', 'auditpilot-content-audit' ),
+				'complete'    => __( 'Scan complete!', 'auditpilot-content-audit' ),
+				'error'       => __( 'An error occurred during scanning.', 'auditpilot-content-audit' ),
+				'starting'    => __( 'Preparing scan...', 'auditpilot-content-audit' ),
+				/* translators: 1: current post number being scanned, 2: total posts to scan */
+				'progress'    => __( 'Scanning post %1$d of %2$d...', 'auditpilot-content-audit' ),
+				'redirecting' => __( 'Redirecting to results...', 'auditpilot-content-audit' ),
+				'startScan'   => __( 'Start New Scan', 'auditpilot-content-audit' ),
 			),
 		) );
 	}
 
 	public function render_dashboard() {
-		require_once CAWP_PATH . 'admin/views/dashboard.php';
+		require_once APCA_PATH . 'admin/views/dashboard.php';
 	}
 
 	public function render_results() {
-		require_once CAWP_PATH . 'admin/views/results.php';
+		require_once APCA_PATH . 'admin/views/results.php';
 	}
 
 	public function render_settings() {
-		require_once CAWP_PATH . 'admin/views/settings.php';
+		require_once APCA_PATH . 'admin/views/settings.php';
 	}
 
 	public function handle_export() {
 		if (
 			! isset( $_GET['page'], $_GET['action'], $_GET['scan_id'] ) ||
-			'wp-content-audit-results' !== $_GET['page'] ||
+			'auditpilot-content-audit-results' !== $_GET['page'] ||
 			'export_csv' !== $_GET['action']
 		) {
 			return;
 		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Permission denied.', 'wp-content-audit' ) );
+			wp_die( esc_html__( 'Permission denied.', 'auditpilot-content-audit' ) );
 		}
 
-		check_admin_referer( 'cawp_export_csv' );
+		check_admin_referer( 'apca_export_csv' );
 
 		$scan_id = (int) $_GET['scan_id'];
-		CAWP_Exporter::export_csv( $scan_id );
+		APCA_Exporter::export_csv( $scan_id );
 	}
 
 	public function save_settings() {
 		if (
-			! isset( $_POST['cawp_settings_nonce'] ) ||
-			! wp_verify_nonce( sanitize_key( $_POST['cawp_settings_nonce'] ), 'cawp_save_settings' )
+			! isset( $_POST['apca_settings_nonce'] ) ||
+			! wp_verify_nonce( sanitize_key( $_POST['apca_settings_nonce'] ), 'apca_save_settings' )
 		) {
 			return;
 		}
@@ -149,12 +150,13 @@ class CAWP_Admin {
 			'old_draft_days'          => isset( $_POST['old_draft_days'] ) ? absint( $_POST['old_draft_days'] ) : 30,
 			'large_image_kb'          => isset( $_POST['large_image_kb'] ) ? absint( $_POST['large_image_kb'] ) : 500,
 			'check_external_links'    => isset( $_POST['check_external_links'] ) ? (bool) $_POST['check_external_links'] : false,
+			'delete_on_deactivation'  => isset( $_POST['delete_on_deactivation'] ) ? (bool) $_POST['delete_on_deactivation'] : false,
 		);
 
-		update_option( 'cawp_settings', $settings );
+		update_option( 'apca_settings', $settings );
 
 		wp_safe_redirect( add_query_arg( array(
-			'page'    => 'wp-content-audit-settings',
+			'page'    => 'auditpilot-content-audit-settings',
 			'updated' => '1',
 		), admin_url( 'admin.php' ) ) );
 		exit;
@@ -162,38 +164,38 @@ class CAWP_Admin {
 
 	public function add_plugin_links( $links ) {
 		$plugin_links = array(
-			'<a href="' . esc_url( admin_url( 'admin.php?page=wp-content-audit' ) ) . '">' . esc_html__( 'Dashboard', 'wp-content-audit' ) . '</a>',
-			'<a href="' . esc_url( admin_url( 'admin.php?page=wp-content-audit-settings' ) ) . '">' . esc_html__( 'Settings', 'wp-content-audit' ) . '</a>',
+			'<a href="' . esc_url( admin_url( 'admin.php?page=auditpilot-content-audit' ) ) . '">' . esc_html__( 'Dashboard', 'auditpilot-content-audit' ) . '</a>',
+			'<a href="' . esc_url( admin_url( 'admin.php?page=auditpilot-content-audit-settings' ) ) . '">' . esc_html__( 'Settings', 'auditpilot-content-audit' ) . '</a>',
 		);
 		return array_merge( $plugin_links, $links );
 	}
 
 	public static function get_severity_label( $severity ) {
 		$labels = array(
-			'error'   => __( 'Error', 'wp-content-audit' ),
-			'warning' => __( 'Warning', 'wp-content-audit' ),
-			'info'    => __( 'Info', 'wp-content-audit' ),
+			'error'   => __( 'Error', 'auditpilot-content-audit' ),
+			'warning' => __( 'Warning', 'auditpilot-content-audit' ),
+			'info'    => __( 'Info', 'auditpilot-content-audit' ),
 		);
 		return isset( $labels[ $severity ] ) ? $labels[ $severity ] : ucfirst( $severity );
 	}
 
 	public static function get_category_label( $category ) {
 		$labels = array(
-			'content'  => __( 'Content', 'wp-content-audit' ),
-			'media'    => __( 'Media', 'wp-content-audit' ),
-			'headings' => __( 'Headings', 'wp-content-audit' ),
-			'links'    => __( 'Links', 'wp-content-audit' ),
-			'seo'      => __( 'SEO', 'wp-content-audit' ),
-			'builder'  => __( 'Builder', 'wp-content-audit' ),
+			'content'  => __( 'Content', 'auditpilot-content-audit' ),
+			'media'    => __( 'Media', 'auditpilot-content-audit' ),
+			'headings' => __( 'Headings', 'auditpilot-content-audit' ),
+			'links'    => __( 'Links', 'auditpilot-content-audit' ),
+			'seo'      => __( 'SEO', 'auditpilot-content-audit' ),
+			'builder'  => __( 'Builder', 'auditpilot-content-audit' ),
 		);
 		return isset( $labels[ $category ] ) ? $labels[ $category ] : ucfirst( $category );
 	}
 
 	public static function get_scan_status_label( $status ) {
 		$labels = array(
-			'running'   => __( 'Running', 'wp-content-audit' ),
-			'completed' => __( 'Completed', 'wp-content-audit' ),
-			'pending'   => __( 'Pending', 'wp-content-audit' ),
+			'running'   => __( 'Running', 'auditpilot-content-audit' ),
+			'completed' => __( 'Completed', 'auditpilot-content-audit' ),
+			'pending'   => __( 'Pending', 'auditpilot-content-audit' ),
 		);
 		return isset( $labels[ $status ] ) ? $labels[ $status ] : ucfirst( $status );
 	}

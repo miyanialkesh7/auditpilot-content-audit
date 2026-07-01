@@ -3,19 +3,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAWP_Scanner {
+class APCA_Scanner {
 
 	public function __construct() {
-		add_action( 'wp_ajax_cawp_start_scan', array( $this, 'ajax_start_scan' ) );
-		add_action( 'wp_ajax_cawp_scan_batch', array( $this, 'ajax_scan_batch' ) );
-		add_action( 'wp_ajax_cawp_get_scan_status', array( $this, 'ajax_get_scan_status' ) );
+		add_action( 'wp_ajax_apca_start_scan', array( $this, 'ajax_start_scan' ) );
+		add_action( 'wp_ajax_apca_scan_batch', array( $this, 'ajax_scan_batch' ) );
+		add_action( 'wp_ajax_apca_get_scan_status', array( $this, 'ajax_get_scan_status' ) );
 	}
 
 	public function ajax_start_scan() {
-		check_ajax_referer( 'cawp_scan_nonce', 'nonce' );
+		check_ajax_referer( 'apca_scan_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'wp-content-audit' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'auditpilot-content-audit' ) ) );
 		}
 
 		$settings = $this->get_settings();
@@ -23,12 +23,12 @@ class CAWP_Scanner {
 		$post_ids = $this->get_posts_to_scan( $settings );
 
 		if ( empty( $post_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No posts found to scan with current settings.', 'wp-content-audit' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No posts found to scan with current settings.', 'auditpilot-content-audit' ) ) );
 		}
 
-		$scan_id = CAWP_Database::create_scan( $settings );
+		$scan_id = APCA_Database::create_scan( $settings );
 
-		CAWP_Database::update_scan( $scan_id, array(
+		APCA_Database::update_scan( $scan_id, array(
 			'total_posts'  => count( $post_ids ),
 			'status'       => 'running',
 		) );
@@ -41,22 +41,22 @@ class CAWP_Scanner {
 	}
 
 	public function ajax_scan_batch() {
-		check_ajax_referer( 'cawp_scan_nonce', 'nonce' );
+		check_ajax_referer( 'apca_scan_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'wp-content-audit' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'auditpilot-content-audit' ) ) );
 		}
 
 		$scan_id  = isset( $_POST['scan_id'] ) ? (int) $_POST['scan_id'] : 0;
 		$post_ids = isset( $_POST['post_ids'] ) ? array_map( 'intval', (array) $_POST['post_ids'] ) : array();
 
 		if ( ! $scan_id || empty( $post_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid scan parameters.', 'wp-content-audit' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid scan parameters.', 'auditpilot-content-audit' ) ) );
 		}
 
-		$scan = CAWP_Database::get_scan( $scan_id );
+		$scan = APCA_Database::get_scan( $scan_id );
 		if ( ! $scan || 'running' !== $scan->status ) {
-			wp_send_json_error( array( 'message' => __( 'Scan not found or already completed.', 'wp-content-audit' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Scan not found or already completed.', 'auditpilot-content-audit' ) ) );
 		}
 
 		$settings      = json_decode( $scan->settings, true ) ?: array();
@@ -77,7 +77,7 @@ class CAWP_Scanner {
 			}
 
 			foreach ( $post_issues as $issue ) {
-				CAWP_Database::insert_issue( $scan_id, $post, $issue );
+				APCA_Database::insert_issue( $scan_id, $post, $issue );
 				$issues_found++;
 			}
 
@@ -85,8 +85,9 @@ class CAWP_Scanner {
 		}
 
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Atomic counter increment on a custom table; no WordPress API equivalent.
 		$wpdb->query( $wpdb->prepare(
-			"UPDATE {$wpdb->prefix}cawp_scans SET scanned_posts = scanned_posts + %d, issues_found = issues_found + %d WHERE id = %d",
+			"UPDATE {$wpdb->prefix}apca_scans SET scanned_posts = scanned_posts + %d, issues_found = issues_found + %d WHERE id = %d",
 			$scanned_count,
 			$issues_found,
 			$scan_id
@@ -99,7 +100,7 @@ class CAWP_Scanner {
 	}
 
 	public function ajax_get_scan_status() {
-		check_ajax_referer( 'cawp_scan_nonce', 'nonce' );
+		check_ajax_referer( 'apca_scan_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error();
@@ -111,7 +112,7 @@ class CAWP_Scanner {
 			wp_send_json_error();
 		}
 
-		$scan = CAWP_Database::get_scan( $scan_id );
+		$scan = APCA_Database::get_scan( $scan_id );
 		if ( ! $scan ) {
 			wp_send_json_error();
 		}
@@ -119,7 +120,7 @@ class CAWP_Scanner {
 		$is_complete = isset( $_POST['complete'] ) && '1' === $_POST['complete'];
 
 		if ( $is_complete && 'running' === $scan->status ) {
-			CAWP_Database::update_scan( $scan_id, array(
+			APCA_Database::update_scan( $scan_id, array(
 				'status'       => 'completed',
 				'completed_at' => current_time( 'mysql' ),
 			) );
@@ -129,7 +130,7 @@ class CAWP_Scanner {
 
 		wp_send_json_success( array(
 			'scan'    => $scan,
-			'results_url' => admin_url( 'admin.php?page=wp-content-audit-results&scan_id=' . $scan_id ),
+			'results_url' => admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=' . $scan_id ),
 		) );
 	}
 
@@ -168,34 +169,34 @@ class CAWP_Scanner {
 		$audits = array();
 
 		if ( in_array( 'content', $enabled, true ) ) {
-			$audits[] = new CAWP_Content_Audit( $settings );
+			$audits[] = new APCA_Content_Audit( $settings );
 		}
 
 		if ( in_array( 'media', $enabled, true ) ) {
-			$audits[] = new CAWP_Media_Audit( $settings );
+			$audits[] = new APCA_Media_Audit( $settings );
 		}
 
 		if ( in_array( 'headings', $enabled, true ) ) {
-			$audits[] = new CAWP_Heading_Audit();
+			$audits[] = new APCA_Heading_Audit();
 		}
 
 		if ( in_array( 'links', $enabled, true ) ) {
-			$audits[] = new CAWP_Link_Audit( $settings );
+			$audits[] = new APCA_Link_Audit( $settings );
 		}
 
 		if ( in_array( 'seo', $enabled, true ) ) {
-			$audits[] = new CAWP_SEO_Audit();
+			$audits[] = new APCA_SEO_Audit();
 		}
 
 		if ( in_array( 'builder', $enabled, true ) ) {
-			$audits[] = new CAWP_Builder_Audit();
+			$audits[] = new APCA_Builder_Audit();
 		}
 
 		return $audits;
 	}
 
 	private function get_settings() {
-		$saved = get_option( 'cawp_settings', array() );
+		$saved = get_option( 'apca_settings', array() );
 
 		return wp_parse_args( $saved, array(
 			'post_types'             => array( 'post', 'page' ),

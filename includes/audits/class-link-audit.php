@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAWP_Link_Audit extends CAWP_Abstract_Audit {
+class APCA_Link_Audit extends APCA_Abstract_Audit {
 
 	const CATEGORY = 'links';
 
@@ -58,11 +58,12 @@ class CAWP_Link_Audit extends CAWP_Abstract_Audit {
 				'empty_link',
 				'warning',
 				sprintf(
+					/* translators: %d: number of empty or placeholder links found */
 					_n(
 						'%d empty or placeholder link found.',
 						'%d empty or placeholder links found.',
 						$count,
-						'wp-content-audit'
+						'auditpilot-content-audit'
 					),
 					$count
 				),
@@ -108,7 +109,7 @@ class CAWP_Link_Audit extends CAWP_Abstract_Audit {
 				'error',
 				sprintf(
 					/* translators: URL */
-					__( 'Broken internal link: %s', 'wp-content-audit' ),
+					__( 'Broken internal link: %s', 'auditpilot-content-audit' ),
 					esc_url( $url )
 				),
 				array( 'url' => $url )
@@ -153,7 +154,7 @@ class CAWP_Link_Audit extends CAWP_Abstract_Audit {
 					'error',
 					sprintf(
 						/* translators: 1: URL, 2: HTTP status code */
-						__( 'Broken external link (HTTP %2$d): %1$s', 'wp-content-audit' ),
+						__( 'Broken external link (HTTP %2$d): %1$s', 'auditpilot-content-audit' ),
 						esc_url( $href ),
 						$status
 					),
@@ -165,7 +166,7 @@ class CAWP_Link_Audit extends CAWP_Abstract_Audit {
 					'info',
 					sprintf(
 						/* translators: 1: URL, 2: HTTP status code */
-						__( 'Redirecting link (HTTP %2$d): %1$s', 'wp-content-audit' ),
+						__( 'Redirecting link (HTTP %2$d): %1$s', 'auditpilot-content-audit' ),
 						esc_url( $href ),
 						$status
 					),
@@ -178,7 +179,7 @@ class CAWP_Link_Audit extends CAWP_Abstract_Audit {
 	}
 
 	private function get_path_from_url( $url ) {
-		$parsed = parse_url( $url );
+		$parsed = wp_parse_url( $url );
 		return isset( $parsed['path'] ) ? $parsed['path'] : '/';
 	}
 
@@ -211,7 +212,7 @@ class CAWP_Link_Audit extends CAWP_Abstract_Audit {
 
 		$response = wp_remote_head( $url, array(
 			'timeout'     => $timeout,
-			'user-agent'  => 'Mozilla/5.0 (compatible; ContentAuditWP/' . CAWP_VERSION . ')',
+			'user-agent'  => 'Mozilla/5.0 (compatible; ContentAuditWP/' . APCA_VERSION . ')',
 			'redirection' => 0,
 		) );
 

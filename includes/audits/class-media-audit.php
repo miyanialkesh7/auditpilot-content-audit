@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAWP_Media_Audit extends CAWP_Abstract_Audit {
+class APCA_Media_Audit extends APCA_Abstract_Audit {
 
 	const CATEGORY = 'media';
 
@@ -59,7 +59,7 @@ class CAWP_Media_Audit extends CAWP_Abstract_Audit {
 						'%d image is missing alt text.',
 						'%d images are missing alt text.',
 						$count,
-						'wp-content-audit'
+						'auditpilot-content-audit'
 					),
 					$count
 				),
@@ -82,7 +82,7 @@ class CAWP_Media_Audit extends CAWP_Abstract_Audit {
 					'error',
 					sprintf(
 						/* translators: attachment ID */
-						__( 'Media reference (ID: %d) no longer exists.', 'wp-content-audit' ),
+						__( 'Media reference (ID: %d) no longer exists.', 'auditpilot-content-audit' ),
 						$attachment_id
 					),
 					array( 'attachment_id' => $attachment_id )
@@ -97,7 +97,7 @@ class CAWP_Media_Audit extends CAWP_Abstract_Audit {
 					'error',
 					sprintf(
 						/* translators: attachment ID */
-						__( 'Media file (ID: %d) is missing from the server.', 'wp-content-audit' ),
+						__( 'Media file (ID: %d) is missing from the server.', 'auditpilot-content-audit' ),
 						$attachment_id
 					),
 					array( 'attachment_id' => $attachment_id, 'file' => basename( $file ) )
@@ -140,7 +140,7 @@ class CAWP_Media_Audit extends CAWP_Abstract_Audit {
 					'warning',
 					sprintf(
 						/* translators: 1: image name, 2: size in KB, 3: threshold in KB */
-						__( 'Image "%1$s" is large (%2$d KB). Consider optimizing (recommended: under %3$d KB).', 'wp-content-audit' ),
+						__( 'Image "%1$s" is large (%2$d KB). Consider optimizing (recommended: under %3$d KB).', 'auditpilot-content-audit' ),
 						basename( $file ),
 						$size_kb,
 						(int) $this->settings['large_image_kb']

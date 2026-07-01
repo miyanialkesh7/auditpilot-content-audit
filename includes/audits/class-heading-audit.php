@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAWP_Heading_Audit extends CAWP_Abstract_Audit {
+class APCA_Heading_Audit extends APCA_Abstract_Audit {
 
 	const CATEGORY = 'headings';
 
@@ -43,7 +43,7 @@ class CAWP_Heading_Audit extends CAWP_Abstract_Audit {
 				'error',
 				sprintf(
 					/* translators: number of H1 tags found */
-					__( 'Multiple H1 tags found (%d). Each page should have only one H1.', 'wp-content-audit' ),
+					__( 'Multiple H1 tags found (%d). Each page should have only one H1.', 'auditpilot-content-audit' ),
 					count( $h1s )
 				),
 				array( 'count' => count( $h1s ) )
@@ -52,7 +52,7 @@ class CAWP_Heading_Audit extends CAWP_Abstract_Audit {
 			$issues[] = $this->issue(
 				'multiple_h1',
 				'warning',
-				__( 'An H1 tag was found in the content. The page title is typically rendered as H1 by the theme; this may cause duplicate H1s.', 'wp-content-audit' )
+				__( 'An H1 tag was found in the content. The page title is typically rendered as H1 by the theme; this may cause duplicate H1s.', 'auditpilot-content-audit' )
 			);
 		}
 
@@ -83,7 +83,7 @@ class CAWP_Heading_Audit extends CAWP_Abstract_Audit {
 					'warning',
 					sprintf(
 						/* translators: 1: heading that was skipped from, 2: heading skipped to */
-						__( 'Heading structure skips from H%1$d to H%2$d. Headings should not skip levels.', 'wp-content-audit' ),
+						__( 'Heading structure skips from H%1$d to H%2$d. Headings should not skip levels.', 'auditpilot-content-audit' ),
 						$prev,
 						$curr
 					),
@@ -119,7 +119,7 @@ class CAWP_Heading_Audit extends CAWP_Abstract_Audit {
 				'warning',
 				sprintf(
 					/* translators: word count */
-					__( 'Content has %d words but no subheadings (H2–H6). Add headings to improve readability.', 'wp-content-audit' ),
+					__( 'Content has %d words but no subheadings (H2–H6). Add headings to improve readability.', 'auditpilot-content-audit' ),
 					$word_count
 				),
 				array( 'word_count' => $word_count )

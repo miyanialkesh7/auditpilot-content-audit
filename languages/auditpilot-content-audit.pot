@@ -1,0 +1,635 @@
+# Copyright (C) 2026 Alkesh Miyani
+# This file is distributed under the same license as the AuditPilot – Smart Content Audit for WordPress plugin.
+# Alkesh Miyani <miyanialkesh7@gmail.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: AuditPilot – Smart Content Audit for WordPress 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/auditpilot-content-audit\n"
+"POT-Creation-Date: 2026-07-01T00:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2026-07-01T00:00:00+00:00\n"
+"Last-Translator: Alkesh Miyani <miyanialkesh7@gmail.com>\n"
+"Language-Team: English (United States) <miyanialkesh7@gmail.com>\n"
+"Language: en_US\n"
+"X-Domain: auditpilot-content-audit\n"
+
+#. Plugin Name of the plugin
+#: auditpilot-content-audit.php
+msgid "AuditPilot – Smart Content Audit for WordPress"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: auditpilot-content-audit.php
+msgid "https://wordpress.org/plugins/auditpilot-content-audit/"
+msgstr ""
+
+#. Description of the plugin
+#: auditpilot-content-audit.php
+msgid "Audit your WordPress content for SEO, accessibility, quality, and best practices."
+msgstr ""
+
+#. Author of the plugin
+#: auditpilot-content-audit.php
+msgid "Alkesh Miyani"
+msgstr ""
+
+#. Author URI of the plugin
+#: auditpilot-content-audit.php
+msgid "https://miyanialkesh7.com"
+msgstr ""
+
+#: admin/views/dashboard.php:30 includes/class-admin.php:18 includes/class-admin.php:19
+msgid "AuditPilot"
+msgstr ""
+
+#: admin/views/dashboard.php:32
+msgid "Audit, Inspect & Improve Every WordPress Content Type."
+msgstr ""
+
+#. translators: 1: time ago, 2: number of posts scanned, 3: number of issues found
+#: admin/views/dashboard.php:45
+#, php-format
+msgid "Last scan completed %1$s — %2$s posts scanned, %3$s issues found."
+msgstr ""
+
+#: admin/views/dashboard.php:46 admin/views/results.php:56
+msgid "ago"
+msgstr ""
+
+#: admin/views/dashboard.php:54
+msgid "A scan is currently in progress."
+msgstr ""
+
+#: admin/views/dashboard.php:58
+msgid "No scans have been run yet. Start your first scan to audit your site content."
+msgstr ""
+
+#: admin/views/dashboard.php:64 includes/class-admin.php:93
+msgid "Start New Scan"
+msgstr ""
+
+#: admin/views/dashboard.php:68 admin/views/dashboard.php:224
+msgid "View Results"
+msgstr ""
+
+#: admin/views/dashboard.php:76 includes/class-admin.php:89
+msgid "Preparing scan..."
+msgstr ""
+
+#: admin/views/dashboard.php:88
+msgid "Latest Scan Overview"
+msgstr ""
+
+#: admin/views/dashboard.php:94 admin/views/results.php:74
+msgid "Overall"
+msgstr ""
+
+#: admin/views/dashboard.php:119
+msgid "Errors"
+msgstr ""
+
+#: admin/views/dashboard.php:123
+msgid "Warnings"
+msgstr ""
+
+#: admin/views/dashboard.php:127 admin/views/results.php:100 includes/class-admin.php:177
+msgid "Info"
+msgstr ""
+
+#: admin/views/dashboard.php:131
+msgid "Posts with Issues"
+msgstr ""
+
+#: admin/views/dashboard.php:137
+msgid "Issues by Category"
+msgstr ""
+
+#: admin/views/dashboard.php:160
+msgid "errors"
+msgstr ""
+
+#: admin/views/dashboard.php:163
+msgid "warnings"
+msgstr ""
+
+#: admin/views/dashboard.php:166
+msgid "info"
+msgstr ""
+
+#: admin/views/dashboard.php:177
+msgid "View All Issues"
+msgstr ""
+
+#: admin/views/dashboard.php:180 admin/views/results.php:64
+msgid "Export CSV"
+msgstr ""
+
+#: admin/views/dashboard.php:189
+msgid "No scan results yet"
+msgstr ""
+
+#: admin/views/dashboard.php:190
+msgid "Run your first scan to discover content issues across your WordPress site."
+msgstr ""
+
+#: admin/views/dashboard.php:199
+msgid "Recent Scans"
+msgstr ""
+
+#: admin/views/dashboard.php:203
+msgid "Date"
+msgstr ""
+
+#: admin/views/dashboard.php:204
+msgid "Posts Scanned"
+msgstr ""
+
+#: admin/views/dashboard.php:205
+msgid "Issues Found"
+msgstr ""
+
+#: admin/views/dashboard.php:206
+msgid "Status"
+msgstr ""
+
+#: admin/views/dashboard.php:207 admin/views/results.php:157
+msgid "Actions"
+msgstr ""
+
+#: admin/views/results.php:20
+msgid "No scan results found. Please run a scan first."
+msgstr ""
+
+#: admin/views/results.php:54 includes/class-admin.php:38 includes/class-admin.php:39
+msgid "Scan Results"
+msgstr ""
+
+#: admin/views/results.php:61
+msgid "← Dashboard"
+msgstr ""
+
+#: admin/views/results.php:85
+msgid "Search posts or messages..."
+msgstr ""
+
+#: admin/views/results.php:88
+msgid "All Categories"
+msgstr ""
+
+#: admin/views/results.php:97
+msgid "All Severities"
+msgstr ""
+
+#: admin/views/results.php:98 includes/class-admin.php:175
+msgid "Error"
+msgstr ""
+
+#: admin/views/results.php:99 includes/class-admin.php:176
+msgid "Warning"
+msgstr ""
+
+#: admin/views/results.php:112
+msgid "All Post Types"
+msgstr ""
+
+#: admin/views/results.php:121
+msgid "Filter"
+msgstr ""
+
+#: admin/views/results.php:124
+msgid "Reset"
+msgstr ""
+
+#. translators: 1: number of issues shown, 2: total issues
+#: admin/views/results.php:133
+#, php-format
+msgid "Showing %1$s of %2$s issues"
+msgstr ""
+
+#: admin/views/results.php:145
+msgid "No issues found with the current filters."
+msgstr ""
+
+#: admin/views/results.php:152 includes/class-exporter.php:36
+msgid "Severity"
+msgstr ""
+
+#: admin/views/results.php:153
+msgid "Post"
+msgstr ""
+
+#: admin/views/results.php:154 includes/class-exporter.php:32
+msgid "Post Type"
+msgstr ""
+
+#: admin/views/results.php:155 includes/class-exporter.php:34
+msgid "Category"
+msgstr ""
+
+#: admin/views/results.php:156
+msgid "Issue"
+msgstr ""
+
+#: admin/views/results.php:172
+msgid "(no title)"
+msgstr ""
+
+#: admin/views/results.php:188
+msgid "Edit"
+msgstr ""
+
+#: admin/views/results.php:191
+msgid "View"
+msgstr ""
+
+#: admin/views/settings.php:19
+msgid "Published"
+msgstr ""
+
+#: admin/views/settings.php:20
+msgid "Drafts"
+msgstr ""
+
+#: admin/views/settings.php:21
+msgid "Pending Review"
+msgstr ""
+
+#: admin/views/settings.php:22
+msgid "Private"
+msgstr ""
+
+#: admin/views/settings.php:26
+msgid "Content Audit"
+msgstr ""
+
+#: admin/views/settings.php:27
+msgid "Media Audit"
+msgstr ""
+
+#: admin/views/settings.php:28
+msgid "Heading Audit"
+msgstr ""
+
+#: admin/views/settings.php:29
+msgid "Link Audit"
+msgstr ""
+
+#: admin/views/settings.php:30
+msgid "SEO Audit"
+msgstr ""
+
+#: admin/views/settings.php:31
+msgid "Builder Audit"
+msgstr ""
+
+#: admin/views/settings.php:36
+msgid "Settings saved."
+msgstr ""
+
+#: admin/views/settings.php:41 includes/class-admin.php:47 includes/class-admin.php:48 includes/class-admin.php:168
+msgid "Settings"
+msgstr ""
+
+#: admin/views/settings.php:48
+msgid "Content to Scan"
+msgstr ""
+
+#: admin/views/settings.php:52
+msgid "Post Types"
+msgstr ""
+
+#: admin/views/settings.php:67
+msgid "Post Statuses"
+msgstr ""
+
+#: admin/views/settings.php:84
+msgid "Audit Modules"
+msgstr ""
+
+#: admin/views/settings.php:88
+msgid "Enabled Audits"
+msgstr ""
+
+#: admin/views/settings.php:105
+msgid "Audit Thresholds"
+msgstr ""
+
+#: admin/views/settings.php:110
+msgid "Short Content Threshold"
+msgstr ""
+
+#: admin/views/settings.php:116
+msgid "words"
+msgstr ""
+
+#: admin/views/settings.php:117
+msgid "Posts with fewer words than this will be flagged as short content."
+msgstr ""
+
+#: admin/views/settings.php:122
+msgid "Old Draft Threshold"
+msgstr ""
+
+#: admin/views/settings.php:128
+msgid "days"
+msgstr ""
+
+#: admin/views/settings.php:129
+msgid "Drafts not updated within this many days will be flagged."
+msgstr ""
+
+#: admin/views/settings.php:134
+msgid "Large Image Threshold"
+msgstr ""
+
+#: admin/views/settings.php:140
+msgid "KB"
+msgstr ""
+
+#: admin/views/settings.php:141
+msgid "Images larger than this size will be flagged for optimization."
+msgstr ""
+
+#: admin/views/settings.php:148
+msgid "Link Checking"
+msgstr ""
+
+#: admin/views/settings.php:152
+msgid "External Link Checking"
+msgstr ""
+
+#: admin/views/settings.php:157
+msgid "Check external links for broken URLs"
+msgstr ""
+
+#: admin/views/settings.php:160
+msgid "Warning: Enabling this significantly increases scan time as it makes HTTP requests to external URLs. Only enable on sites with few external links."
+msgstr ""
+
+#: admin/views/settings.php:168
+msgid "Data Management"
+msgstr ""
+
+#: admin/views/settings.php:172
+msgid "Remove Data on Deactivation"
+msgstr ""
+
+#: admin/views/settings.php:177
+msgid "Delete all scan data (database tables) when the plugin is deactivated"
+msgstr ""
+
+#: admin/views/settings.php:180
+msgid "When enabled, deactivating the plugin will permanently remove all scan results from the database. Your audit settings will be preserved. This cannot be undone."
+msgstr ""
+
+#: admin/views/settings.php:187
+msgid "Save Settings"
+msgstr ""
+
+#. translators: %d: number of empty Gutenberg blocks found
+#: includes/audits/class-builder-audit.php:43
+#, php-format
+msgid "%d empty Gutenberg block found."
+msgid_plural "%d empty Gutenberg blocks found."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of empty Elementor widgets found
+#: includes/audits/class-builder-audit.php:124
+#, php-format
+msgid "%d empty Elementor widget found."
+msgid_plural "%d empty Elementor widgets found."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/audits/class-content-audit.php:62
+msgid "Post has no content."
+msgstr ""
+
+#: includes/audits/class-content-audit.php:74
+msgid "Post is missing a featured image."
+msgstr ""
+
+#: includes/audits/class-content-audit.php:86
+msgid "Post is missing a manual excerpt."
+msgstr ""
+
+#. translators: 1: word count, 2: threshold
+#: includes/audits/class-content-audit.php:109
+#, php-format
+msgid "Content is short: %1$d words (minimum recommended: %2$d)."
+msgstr ""
+
+#. translators: 1: number of days old
+#: includes/audits/class-content-audit.php:136
+#, php-format
+msgid "Draft has not been updated in %d days."
+msgstr ""
+
+#. translators: number of H1 tags found
+#: includes/audits/class-heading-audit.php:46
+#, php-format
+msgid "Multiple H1 tags found (%d). Each page should have only one H1."
+msgstr ""
+
+#: includes/audits/class-heading-audit.php:55
+msgid "An H1 tag was found in the content. The page title is typically rendered as H1 by the theme; this may cause duplicate H1s."
+msgstr ""
+
+#. translators: 1: heading that was skipped from, 2: heading skipped to
+#: includes/audits/class-heading-audit.php:86
+#, php-format
+msgid "Heading structure skips from H%1$d to H%2$d. Headings should not skip levels."
+msgstr ""
+
+#. translators: word count
+#: includes/audits/class-heading-audit.php:122
+#, php-format
+msgid "Content has %d words but no subheadings (H2–H6). Add headings to improve readability."
+msgstr ""
+
+#. translators: %d: number of empty or placeholder links found
+#: includes/audits/class-link-audit.php:62
+#, php-format
+msgid "%d empty or placeholder link found."
+msgid_plural "%d empty or placeholder links found."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: URL
+#: includes/audits/class-link-audit.php:112
+#, php-format
+msgid "Broken internal link: %s"
+msgstr ""
+
+#. translators: 1: URL, 2: HTTP status code
+#: includes/audits/class-link-audit.php:157
+#, php-format
+msgid "Broken external link (HTTP %2$d): %1$s"
+msgstr ""
+
+#. translators: 1: URL, 2: HTTP status code
+#: includes/audits/class-link-audit.php:169
+#, php-format
+msgid "Redirecting link (HTTP %2$d): %1$s"
+msgstr ""
+
+#. translators: number of images missing alt text
+#: includes/audits/class-media-audit.php:58
+#, php-format
+msgid "%d image is missing alt text."
+msgid_plural "%d images are missing alt text."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: attachment ID
+#: includes/audits/class-media-audit.php:85
+#, php-format
+msgid "Media reference (ID: %d) no longer exists."
+msgstr ""
+
+#. translators: attachment ID
+#: includes/audits/class-media-audit.php:100
+#, php-format
+msgid "Media file (ID: %d) is missing from the server."
+msgstr ""
+
+#. translators: 1: image name, 2: size in KB, 3: threshold in KB
+#: includes/audits/class-media-audit.php:143
+#, php-format
+msgid "Image \"%1$s\" is large (%2$d KB). Consider optimizing (recommended: under %3$d KB)."
+msgstr ""
+
+#. translators: SEO plugin name
+#: includes/audits/class-seo-audit.php:64
+#, php-format
+msgid "Missing SEO title in %s. A custom SEO title helps search engines understand the page."
+msgstr ""
+
+#. translators: SEO plugin name
+#: includes/audits/class-seo-audit.php:88
+#, php-format
+msgid "Missing meta description in %s. A meta description improves click-through rates in search results."
+msgstr ""
+
+#: includes/audits/class-seo-audit.php:106
+msgid "No Open Graph image set. Consider adding a featured image or setting an OG image in your SEO plugin."
+msgstr ""
+
+#. translators: SEO plugin name
+#: includes/audits/class-seo-audit.php:118
+#, php-format
+msgid "Missing Open Graph image in %s."
+msgstr ""
+
+#: includes/audits/class-seo-audit.php:183
+msgid "your SEO plugin"
+msgstr ""
+
+#: includes/class-admin.php:29 includes/class-admin.php:30 includes/class-admin.php:167
+msgid "Dashboard"
+msgstr ""
+
+#: includes/class-admin.php:86
+msgid "Scanning..."
+msgstr ""
+
+#: includes/class-admin.php:87
+msgid "Scan complete!"
+msgstr ""
+
+#: includes/class-admin.php:88
+msgid "An error occurred during scanning."
+msgstr ""
+
+#: includes/class-admin.php:91
+#, php-format
+msgid "Scanning post %1$d of %2$d..."
+msgstr ""
+
+#: includes/class-admin.php:92
+msgid "Redirecting to results..."
+msgstr ""
+
+#: includes/class-admin.php:120 includes/class-scanner.php:18 includes/class-scanner.php:47
+msgid "Permission denied."
+msgstr ""
+
+#: includes/class-admin.php:184
+msgid "Content"
+msgstr ""
+
+#: includes/class-admin.php:185
+msgid "Media"
+msgstr ""
+
+#: includes/class-admin.php:186
+msgid "Headings"
+msgstr ""
+
+#: includes/class-admin.php:187
+msgid "Links"
+msgstr ""
+
+#: includes/class-admin.php:188
+msgid "SEO"
+msgstr ""
+
+#: includes/class-admin.php:189
+msgid "Builder"
+msgstr ""
+
+#: includes/class-admin.php:196
+msgid "Running"
+msgstr ""
+
+#: includes/class-admin.php:197
+msgid "Completed"
+msgstr ""
+
+#: includes/class-admin.php:198
+msgid "Pending"
+msgstr ""
+
+#: includes/class-exporter.php:11
+msgid "Scan not found."
+msgstr ""
+
+#: includes/class-exporter.php:30
+msgid "Post ID"
+msgstr ""
+
+#: includes/class-exporter.php:31
+msgid "Post Title"
+msgstr ""
+
+#: includes/class-exporter.php:33
+msgid "Post URL"
+msgstr ""
+
+#: includes/class-exporter.php:35
+msgid "Issue Type"
+msgstr ""
+
+#: includes/class-exporter.php:37
+msgid "Message"
+msgstr ""
+
+#: includes/class-exporter.php:38
+msgid "Found At"
+msgstr ""
+
+#: includes/class-scanner.php:26
+msgid "No posts found to scan with current settings."
+msgstr ""
+
+#: includes/class-scanner.php:54
+msgid "Invalid scan parameters."
+msgstr ""
+
+#: includes/class-scanner.php:59
+msgid "Scan not found or already completed."
+msgstr ""

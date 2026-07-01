@@ -1,4 +1,6 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template file included inside APCA_Admin; variables are local to the method scope, not truly global.
+// phpcs:disable WordPress.Security.NonceVerification.Recommended -- All $_GET params here are read-only display filters; no data is written or deleted. Page is already protected by manage_options capability check in add_submenu_page().
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -6,16 +8,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 $scan_id = isset( $_GET['scan_id'] ) ? (int) $_GET['scan_id'] : 0;
 
 if ( ! $scan_id ) {
-	$latest = CAWP_Database::get_latest_scan();
+	$latest = APCA_Database::get_latest_scan();
 	if ( $latest ) {
 		$scan_id = (int) $latest->id;
 	}
 }
 
-$scan = $scan_id ? CAWP_Database::get_scan( $scan_id ) : null;
+$scan = $scan_id ? APCA_Database::get_scan( $scan_id ) : null;
 
 if ( ! $scan ) {
-	echo '<div class="wrap"><div class="notice notice-warning"><p>' . esc_html__( 'No scan results found. Please run a scan first.', 'wp-content-audit' ) . '</p></div></div>';
+	echo '<div class="wrap"><div class="notice notice-warning"><p>' . esc_html__( 'No scan results found. Please run a scan first.', 'auditpilot-content-audit' ) . '</p></div></div>';
 	return;
 }
 
@@ -27,7 +29,7 @@ $search            = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GE
 $current_page      = isset( $_GET['paged'] ) ? max( 1, (int) $_GET['paged'] ) : 1;
 $per_page          = 25;
 
-$result = CAWP_Database::get_issues( $scan_id, array(
+$result = APCA_Database::get_issues( $scan_id, array(
 	'category'   => $filter_category,
 	'severity'   => $filter_severity,
 	'post_type'  => $filter_post_type,
@@ -41,61 +43,61 @@ $issues      = $result['items'];
 $total       = $result['total'];
 $total_pages = $result['pages'];
 
-$score_data = CAWP_Database::get_score_data( $scan_id );
-$summary    = CAWP_Database::get_summary( $scan_id );
+$score_data = APCA_Database::get_score_data( $scan_id );
+$summary    = APCA_Database::get_summary( $scan_id );
 
-$base_url = admin_url( 'admin.php?page=wp-content-audit-results&scan_id=' . $scan_id );
+$base_url = admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=' . $scan_id );
 ?>
-<div class="wrap cawp-wrap">
-	<div class="cawp-header">
-		<h1 class="cawp-title">
-			<?php esc_html_e( 'Scan Results', 'wp-content-audit' ); ?>
+<div class="wrap apca-wrap">
+	<div class="apca-header">
+		<h1 class="apca-title">
+			<?php esc_html_e( 'Scan Results', 'auditpilot-content-audit' ); ?>
 			<?php if ( 'completed' === $scan->status ) : ?>
-				<span class="cawp-title-meta"><?php echo esc_html( human_time_diff( strtotime( $scan->completed_at ), current_time( 'timestamp' ) ) . ' ' . __( 'ago', 'wp-content-audit' ) ); ?></span>
+				<span class="apca-title-meta"><?php echo esc_html( human_time_diff( strtotime( $scan->completed_at ), current_time( 'timestamp' ) ) . ' ' . __( 'ago', 'auditpilot-content-audit' ) ); ?></span>
 			<?php endif; ?>
 		</h1>
-		<div class="cawp-header-actions">
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=wp-content-audit' ) ); ?>" class="button button-secondary">
-				<?php esc_html_e( '← Dashboard', 'wp-content-audit' ); ?>
+		<div class="apca-header-actions">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=auditpilot-content-audit' ) ); ?>" class="button button-secondary">
+				<?php esc_html_e( '← Dashboard', 'auditpilot-content-audit' ); ?>
 			</a>
-			<a href="<?php echo esc_url( wp_nonce_url( $base_url . '&action=export_csv', 'cawp_export_csv' ) ); ?>" class="button button-secondary">
-				<?php esc_html_e( 'Export CSV', 'wp-content-audit' ); ?>
+			<a href="<?php echo esc_url( wp_nonce_url( $base_url . '&action=export_csv', 'apca_export_csv' ) ); ?>" class="button button-secondary">
+				<?php esc_html_e( 'Export CSV', 'auditpilot-content-audit' ); ?>
 			</a>
 		</div>
 	</div>
 
 	<?php if ( $score_data ) : ?>
-	<div class="cawp-scores-row">
+	<div class="apca-scores-row">
 		<?php foreach ( array_merge( array( 'overall' => $score_data['overall'] ), $score_data['categories'] ) as $key => $score ) : ?>
-		<div class="cawp-score-pill cawp-score-<?php echo esc_attr( CAWP_Admin::get_score_class( $score ) ); ?>">
-			<span class="cawp-score-pill-num"><?php echo esc_html( $score ); ?></span>
-			<span class="cawp-score-pill-label"><?php echo esc_html( 'overall' === $key ? __( 'Overall', 'wp-content-audit' ) : CAWP_Admin::get_category_label( $key ) ); ?></span>
+		<div class="apca-score-pill apca-score-<?php echo esc_attr( APCA_Admin::get_score_class( $score ) ); ?>">
+			<span class="apca-score-pill-num"><?php echo esc_html( $score ); ?></span>
+			<span class="apca-score-pill-label"><?php echo esc_html( 'overall' === $key ? __( 'Overall', 'auditpilot-content-audit' ) : APCA_Admin::get_category_label( $key ) ); ?></span>
 		</div>
 		<?php endforeach; ?>
 	</div>
 	<?php endif; ?>
 
-	<div class="cawp-filters-bar">
-		<form method="get" class="cawp-filters-form">
-			<input type="hidden" name="page" value="wp-content-audit-results">
+	<div class="apca-filters-bar">
+		<form method="get" class="apca-filters-form">
+			<input type="hidden" name="page" value="auditpilot-content-audit-results">
 			<input type="hidden" name="scan_id" value="<?php echo esc_attr( $scan_id ); ?>">
 
-			<input type="search" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search posts or messages...', 'wp-content-audit' ); ?>" class="cawp-search-input">
+			<input type="search" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search posts or messages...', 'auditpilot-content-audit' ); ?>" class="apca-search-input">
 
 			<select name="category">
-				<option value=""><?php esc_html_e( 'All Categories', 'wp-content-audit' ); ?></option>
+				<option value=""><?php esc_html_e( 'All Categories', 'auditpilot-content-audit' ); ?></option>
 				<?php foreach ( array( 'content', 'media', 'headings', 'links', 'seo', 'builder' ) as $cat ) : ?>
 				<option value="<?php echo esc_attr( $cat ); ?>" <?php selected( $filter_category, $cat ); ?>>
-					<?php echo esc_html( CAWP_Admin::get_category_label( $cat ) ); ?>
+					<?php echo esc_html( APCA_Admin::get_category_label( $cat ) ); ?>
 				</option>
 				<?php endforeach; ?>
 			</select>
 
 			<select name="severity">
-				<option value=""><?php esc_html_e( 'All Severities', 'wp-content-audit' ); ?></option>
-				<option value="error" <?php selected( $filter_severity, 'error' ); ?>><?php esc_html_e( 'Error', 'wp-content-audit' ); ?></option>
-				<option value="warning" <?php selected( $filter_severity, 'warning' ); ?>><?php esc_html_e( 'Warning', 'wp-content-audit' ); ?></option>
-				<option value="info" <?php selected( $filter_severity, 'info' ); ?>><?php esc_html_e( 'Info', 'wp-content-audit' ); ?></option>
+				<option value=""><?php esc_html_e( 'All Severities', 'auditpilot-content-audit' ); ?></option>
+				<option value="error" <?php selected( $filter_severity, 'error' ); ?>><?php esc_html_e( 'Error', 'auditpilot-content-audit' ); ?></option>
+				<option value="warning" <?php selected( $filter_severity, 'warning' ); ?>><?php esc_html_e( 'Warning', 'auditpilot-content-audit' ); ?></option>
+				<option value="info" <?php selected( $filter_severity, 'info' ); ?>><?php esc_html_e( 'Info', 'auditpilot-content-audit' ); ?></option>
 			</select>
 
 			<?php
@@ -107,7 +109,7 @@ $base_url = admin_url( 'admin.php?page=wp-content-audit-results&scan_id=' . $sca
 			}
 			if ( ! empty( $post_types_in_results ) ) : ?>
 			<select name="post_type">
-				<option value=""><?php esc_html_e( 'All Post Types', 'wp-content-audit' ); ?></option>
+				<option value=""><?php esc_html_e( 'All Post Types', 'auditpilot-content-audit' ); ?></option>
 				<?php foreach ( $post_types_in_results as $pt_slug => $pt_obj ) : ?>
 				<option value="<?php echo esc_attr( $pt_slug ); ?>" <?php selected( $filter_post_type, $pt_slug ); ?>>
 					<?php echo esc_html( $pt_obj ? $pt_obj->labels->singular_name : $pt_slug ); ?>
@@ -116,19 +118,19 @@ $base_url = admin_url( 'admin.php?page=wp-content-audit-results&scan_id=' . $sca
 			</select>
 			<?php endif; ?>
 
-			<button type="submit" class="button"><?php esc_html_e( 'Filter', 'wp-content-audit' ); ?></button>
+			<button type="submit" class="button"><?php esc_html_e( 'Filter', 'auditpilot-content-audit' ); ?></button>
 
 			<?php if ( $filter_category || $filter_severity || $filter_post_type || $search ) : ?>
-			<a href="<?php echo esc_url( $base_url ); ?>" class="button cawp-reset-filters"><?php esc_html_e( 'Reset', 'wp-content-audit' ); ?></a>
+			<a href="<?php echo esc_url( $base_url ); ?>" class="button apca-reset-filters"><?php esc_html_e( 'Reset', 'auditpilot-content-audit' ); ?></a>
 			<?php endif; ?>
 		</form>
 
-		<div class="cawp-results-count">
+		<div class="apca-results-count">
 			<?php
 			echo wp_kses(
 				sprintf(
 					/* translators: 1: number of issues shown, 2: total issues */
-					__( 'Showing %1$s of %2$s issues', 'wp-content-audit' ),
+					__( 'Showing %1$s of %2$s issues', 'auditpilot-content-audit' ),
 					'<strong>' . esc_html( number_format_i18n( count( $issues ) ) ) . '</strong>',
 					'<strong>' . esc_html( number_format_i18n( $total ) ) . '</strong>'
 				),
@@ -139,20 +141,20 @@ $base_url = admin_url( 'admin.php?page=wp-content-audit-results&scan_id=' . $sca
 	</div>
 
 	<?php if ( empty( $issues ) ) : ?>
-	<div class="cawp-no-results">
-		<p><?php esc_html_e( 'No issues found with the current filters.', 'wp-content-audit' ); ?></p>
+	<div class="apca-no-results">
+		<p><?php esc_html_e( 'No issues found with the current filters.', 'auditpilot-content-audit' ); ?></p>
 	</div>
 	<?php else : ?>
 
-	<table class="wp-list-table widefat fixed striped cawp-issues-table">
+	<table class="wp-list-table widefat fixed striped apca-issues-table">
 		<thead>
 			<tr>
-				<th class="cawp-col-severity"><?php esc_html_e( 'Severity', 'wp-content-audit' ); ?></th>
-				<th class="cawp-col-post"><?php esc_html_e( 'Post', 'wp-content-audit' ); ?></th>
-				<th class="cawp-col-type"><?php esc_html_e( 'Post Type', 'wp-content-audit' ); ?></th>
-				<th class="cawp-col-category"><?php esc_html_e( 'Category', 'wp-content-audit' ); ?></th>
-				<th class="cawp-col-issue"><?php esc_html_e( 'Issue', 'wp-content-audit' ); ?></th>
-				<th class="cawp-col-actions"><?php esc_html_e( 'Actions', 'wp-content-audit' ); ?></th>
+				<th class="apca-col-severity"><?php esc_html_e( 'Severity', 'auditpilot-content-audit' ); ?></th>
+				<th class="apca-col-post"><?php esc_html_e( 'Post', 'auditpilot-content-audit' ); ?></th>
+				<th class="apca-col-type"><?php esc_html_e( 'Post Type', 'auditpilot-content-audit' ); ?></th>
+				<th class="apca-col-category"><?php esc_html_e( 'Category', 'auditpilot-content-audit' ); ?></th>
+				<th class="apca-col-issue"><?php esc_html_e( 'Issue', 'auditpilot-content-audit' ); ?></th>
+				<th class="apca-col-actions"><?php esc_html_e( 'Actions', 'auditpilot-content-audit' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -160,33 +162,33 @@ $base_url = admin_url( 'admin.php?page=wp-content-audit-results&scan_id=' . $sca
 				$post_type_obj = get_post_type_object( $issue->post_type );
 				$pt_label      = $post_type_obj ? $post_type_obj->labels->singular_name : $issue->post_type;
 			?>
-			<tr class="cawp-issue-row cawp-issue-<?php echo esc_attr( $issue->severity ); ?>">
-				<td class="cawp-col-severity">
-					<span class="cawp-severity-badge cawp-severity-<?php echo esc_attr( $issue->severity ); ?>">
-						<?php echo esc_html( CAWP_Admin::get_severity_label( $issue->severity ) ); ?>
+			<tr class="apca-issue-row apca-issue-<?php echo esc_attr( $issue->severity ); ?>">
+				<td class="apca-col-severity">
+					<span class="apca-severity-badge apca-severity-<?php echo esc_attr( $issue->severity ); ?>">
+						<?php echo esc_html( APCA_Admin::get_severity_label( $issue->severity ) ); ?>
 					</span>
 				</td>
-				<td class="cawp-col-post">
-					<strong><?php echo esc_html( $issue->post_title ?: __( '(no title)', 'wp-content-audit' ) ); ?></strong>
+				<td class="apca-col-post">
+					<strong><?php echo esc_html( $issue->post_title ?: __( '(no title)', 'auditpilot-content-audit' ) ); ?></strong>
 				</td>
-				<td class="cawp-col-type">
+				<td class="apca-col-type">
 					<?php echo esc_html( $pt_label ); ?>
 				</td>
-				<td class="cawp-col-category">
-					<a href="<?php echo esc_url( add_query_arg( 'category', $issue->category, $base_url ) ); ?>" class="cawp-category-link">
-						<?php echo esc_html( CAWP_Admin::get_category_label( $issue->category ) ); ?>
+				<td class="apca-col-category">
+					<a href="<?php echo esc_url( add_query_arg( 'category', $issue->category, $base_url ) ); ?>" class="apca-category-link">
+						<?php echo esc_html( APCA_Admin::get_category_label( $issue->category ) ); ?>
 					</a>
 				</td>
-				<td class="cawp-col-issue">
+				<td class="apca-col-issue">
 					<?php echo esc_html( $issue->message ); ?>
 				</td>
-				<td class="cawp-col-actions">
+				<td class="apca-col-actions">
 					<?php if ( ! empty( $issue->post_url ) ) : ?>
 					<a href="<?php echo esc_url( get_edit_post_link( $issue->post_id ) ); ?>" class="button button-small" target="_blank">
-						<?php esc_html_e( 'Edit', 'wp-content-audit' ); ?>
+						<?php esc_html_e( 'Edit', 'auditpilot-content-audit' ); ?>
 					</a>
 					<a href="<?php echo esc_url( $issue->post_url ); ?>" class="button button-small" target="_blank">
-						<?php esc_html_e( 'View', 'wp-content-audit' ); ?>
+						<?php esc_html_e( 'View', 'auditpilot-content-audit' ); ?>
 					</a>
 					<?php endif; ?>
 				</td>
@@ -211,7 +213,7 @@ $base_url = admin_url( 'admin.php?page=wp-content-audit-results&scan_id=' . $sca
 			$pagination_args['base'] = add_query_arg( 'severity', $filter_severity, $pagination_args['base'] );
 		}
 		?>
-	<div class="cawp-pagination">
+	<div class="apca-pagination">
 		<?php echo paginate_links( $pagination_args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
 	<?php endif; ?>
