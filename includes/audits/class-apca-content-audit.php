@@ -1,14 +1,35 @@
 <?php
+/**
+ * Content audit: checks for empty content, missing featured image/excerpt,
+ * short content, and stale drafts.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Audits a post's core content fields: body, featured image, excerpt,
+ * word count, and draft staleness.
+ */
 class APCA_Content_Audit extends APCA_Abstract_Audit {
 
 	const CATEGORY = 'content';
 
+	/**
+	 * Audit settings.
+	 *
+	 * @var array
+	 */
 	private $settings;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param array $settings Audit settings.
+	 */
 	public function __construct( $settings = array() ) {
 		$this->settings = wp_parse_args(
 			$settings,
@@ -19,6 +40,12 @@ class APCA_Content_Audit extends APCA_Abstract_Audit {
 		);
 	}
 
+	/**
+	 * Run the content audit against a single post.
+	 *
+	 * @param WP_Post $post Post to audit.
+	 * @return array List of issues found.
+	 */
 	public function run( $post ) {
 		$issues = array();
 
@@ -55,6 +82,12 @@ class APCA_Content_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Check whether a post's content is empty.
+	 *
+	 * @param WP_Post $post Post to check.
+	 * @return array|null Issue entry, or null if there's no issue.
+	 */
 	private function check_empty_content( $post ) {
 		$content = trim( wp_strip_all_tags( $post->post_content ) );
 
@@ -69,6 +102,12 @@ class APCA_Content_Audit extends APCA_Abstract_Audit {
 		return null;
 	}
 
+	/**
+	 * Check whether a post is missing a featured image.
+	 *
+	 * @param WP_Post $post Post to check.
+	 * @return array|null Issue entry, or null if there's no issue.
+	 */
 	private function check_missing_featured_image( $post ) {
 		if ( ! has_post_thumbnail( $post->ID ) ) {
 			return $this->issue(
@@ -81,6 +120,12 @@ class APCA_Content_Audit extends APCA_Abstract_Audit {
 		return null;
 	}
 
+	/**
+	 * Check whether a post is missing a manual excerpt.
+	 *
+	 * @param WP_Post $post Post to check.
+	 * @return array|null Issue entry, or null if there's no issue.
+	 */
 	private function check_missing_excerpt( $post ) {
 		if ( post_type_supports( $post->post_type, 'excerpt' ) && empty( trim( $post->post_excerpt ) ) ) {
 			return $this->issue(
@@ -93,6 +138,12 @@ class APCA_Content_Audit extends APCA_Abstract_Audit {
 		return null;
 	}
 
+	/**
+	 * Check whether a post's content is below the configured word-count threshold.
+	 *
+	 * @param WP_Post $post Post to check.
+	 * @return array|null Issue entry, or null if there's no issue.
+	 */
 	private function check_short_content( $post ) {
 		$threshold = (int) $this->settings['short_content_threshold'];
 		$content   = trim( wp_strip_all_tags( $post->post_content ) );
@@ -123,6 +174,12 @@ class APCA_Content_Audit extends APCA_Abstract_Audit {
 		return null;
 	}
 
+	/**
+	 * Check whether a draft post has gone untouched past the configured age threshold.
+	 *
+	 * @param WP_Post $post Post to check.
+	 * @return array|null Issue entry, or null if there's no issue.
+	 */
 	private function check_old_draft( $post ) {
 		if ( 'draft' !== $post->post_status ) {
 			return null;

@@ -1,12 +1,27 @@
 <?php
+/**
+ * Page builder audit: checks for empty Gutenberg blocks and Elementor widgets.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Audits a post's Gutenberg blocks and Elementor widgets for empty content.
+ */
 class APCA_Builder_Audit extends APCA_Abstract_Audit {
 
 	const CATEGORY = 'builder';
 
+	/**
+	 * Run the builder audit against a single post.
+	 *
+	 * @param WP_Post $post Post to audit.
+	 * @return array List of issues found.
+	 */
 	public function run( $post ) {
 		$issues = array();
 
@@ -23,6 +38,12 @@ class APCA_Builder_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Check a post's Gutenberg blocks for empty content.
+	 *
+	 * @param WP_Post $post Post to check.
+	 * @return array List of issues found.
+	 */
 	private function check_empty_gutenberg_blocks( $post ) {
 		$issues  = array();
 		$content = $post->post_content;
@@ -55,6 +76,12 @@ class APCA_Builder_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Recursively count empty Gutenberg blocks.
+	 *
+	 * @param array[] $blocks Blocks as returned by parse_blocks().
+	 * @return int Number of empty blocks found.
+	 */
 	private function count_empty_blocks( $blocks ) {
 		$count = 0;
 
@@ -66,7 +93,7 @@ class APCA_Builder_Audit extends APCA_Abstract_Audit {
 			$inner_html    = trim( $block['innerHTML'] ?? '' );
 			$inner_content = trim( implode( '', $block['innerContent'] ?? array() ) );
 
-			$text = wp_strip_all_tags( $inner_html ?: $inner_content );
+			$text = wp_strip_all_tags( $inner_html ? $inner_html : $inner_content );
 			$text = trim( $text );
 
 			$skip_blocks = array(
@@ -96,6 +123,12 @@ class APCA_Builder_Audit extends APCA_Abstract_Audit {
 		return $count;
 	}
 
+	/**
+	 * Check a post's Elementor data for empty widgets.
+	 *
+	 * @param WP_Post $post Post to check.
+	 * @return array List of issues found.
+	 */
 	private function check_empty_elementor( $post ) {
 		$issues = array();
 
@@ -136,6 +169,12 @@ class APCA_Builder_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Recursively count empty Elementor text-based widgets.
+	 *
+	 * @param array[] $elements Elementor element tree.
+	 * @return int Number of empty widgets found.
+	 */
 	private function count_empty_elementor_widgets( $elements ) {
 		$count = 0;
 

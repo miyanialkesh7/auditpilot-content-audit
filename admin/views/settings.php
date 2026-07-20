@@ -1,4 +1,10 @@
 <?php
+/**
+ * Settings page view.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template file included inside APCA_Admin; variables are local to the method scope, not truly global.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

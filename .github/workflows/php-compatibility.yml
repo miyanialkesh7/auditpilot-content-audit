@@ -27,4 +27,4 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Run PHPCompatibilityWP
-        run: vendor/bin/phpcs --standard=PHPCompatibilityWP --runtime-set testVersion 7.4- --extensions=php --ignore=vendor,tests .
+        run: composer compat

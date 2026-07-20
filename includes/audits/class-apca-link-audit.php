@@ -1,15 +1,41 @@
 <?php
+/**
+ * Link audit: checks for empty, broken internal, and broken external links.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Audits a post's links for empty placeholders, broken internal targets,
+ * and (optionally) broken or redirecting external URLs.
+ */
 class APCA_Link_Audit extends APCA_Abstract_Audit {
 
 	const CATEGORY = 'links';
 
+	/**
+	 * Audit settings.
+	 *
+	 * @var array
+	 */
 	private $settings;
+
+	/**
+	 * Cache of external URL status codes already checked, keyed by URL.
+	 *
+	 * @var array
+	 */
 	private static $checked_urls = array();
 
+	/**
+	 * Constructor.
+	 *
+	 * @param array $settings Audit settings.
+	 */
 	public function __construct( $settings = array() ) {
 		$this->settings = wp_parse_args(
 			$settings,
@@ -20,6 +46,12 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 		);
 	}
 
+	/**
+	 * Run the link audit against a single post.
+	 *
+	 * @param WP_Post $post Post to audit.
+	 * @return array List of issues found.
+	 */
 	public function run( $post ) {
 		$issues  = array();
 		$content = $post->post_content;
@@ -45,6 +77,12 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Check a set of links for empty or placeholder href values.
+	 *
+	 * @param array[] $links Links as returned by get_links_from_content().
+	 * @return array List of issues found.
+	 */
 	private function check_empty_links( $links ) {
 		$issues = array();
 		$count  = 0;
@@ -77,6 +115,12 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Check a set of links for broken internal targets.
+	 *
+	 * @param array[] $links Links as returned by get_links_from_content().
+	 * @return array List of issues found.
+	 */
 	private function check_internal_links( $links ) {
 		$issues = array();
 		$broken = array();
@@ -122,6 +166,12 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Check a set of links for broken or redirecting external URLs.
+	 *
+	 * @param array[] $links Links as returned by get_links_from_content().
+	 * @return array List of issues found.
+	 */
 	private function check_external_links( $links ) {
 		$issues  = array();
 		$checked = array();
@@ -151,7 +201,7 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 
 			$checked[ $base_url ] = true;
 
-			if ( $status >= 400 || $status === 0 ) {
+			if ( $status >= 400 || 0 === $status ) {
 				$issues[] = $this->issue(
 					'broken_external_link',
 					'error',
@@ -187,11 +237,23 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Get the path component of a URL.
+	 *
+	 * @param string $url URL to parse.
+	 * @return string Path, or '/' if none is present.
+	 */
 	private function get_path_from_url( $url ) {
 		$parsed = wp_parse_url( $url );
 		return isset( $parsed['path'] ) ? $parsed['path'] : '/';
 	}
 
+	/**
+	 * Check whether an internal path resolves to an existing post or term.
+	 *
+	 * @param string $path Path to check.
+	 * @return bool True if the path resolves to a post or public taxonomy term.
+	 */
 	private function internal_url_exists( $path ) {
 		if ( '/' === $path || '' === $path ) {
 			return true;
@@ -216,6 +278,12 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 		return false;
 	}
 
+	/**
+	 * Fetch the HTTP status code for an external URL.
+	 *
+	 * @param string $url URL to check.
+	 * @return int HTTP status code, or 0 if the request failed.
+	 */
 	private function check_url_status( $url ) {
 		$timeout = isset( $this->settings['external_link_timeout'] ) ? (int) $this->settings['external_link_timeout'] : 5;
 

@@ -1,16 +1,32 @@
 <?php
+/**
+ * Scan orchestration: AJAX handlers that run audits in batches over posts.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Handles the AJAX-driven scan lifecycle: starting a scan, processing
+ * batches of posts through the enabled audits, and reporting status.
+ */
 class APCA_Scanner {
 
+	/**
+	 * Constructor. Registers AJAX action hooks.
+	 */
 	public function __construct() {
 		add_action( 'wp_ajax_apca_start_scan', array( $this, 'ajax_start_scan' ) );
 		add_action( 'wp_ajax_apca_scan_batch', array( $this, 'ajax_scan_batch' ) );
 		add_action( 'wp_ajax_apca_get_scan_status', array( $this, 'ajax_get_scan_status' ) );
 	}
 
+	/**
+	 * AJAX handler: create a new scan and return the post IDs to process.
+	 */
 	public function ajax_start_scan() {
 		check_ajax_referer( 'apca_scan_nonce', 'nonce' );
 
@@ -45,6 +61,9 @@ class APCA_Scanner {
 		);
 	}
 
+	/**
+	 * AJAX handler: run enabled audits over a batch of posts and record issues.
+	 */
 	public function ajax_scan_batch() {
 		check_ajax_referer( 'apca_scan_nonce', 'nonce' );
 
@@ -64,9 +83,10 @@ class APCA_Scanner {
 			wp_send_json_error( array( 'message' => __( 'Scan not found or already completed.', 'auditpilot-content-audit' ) ) );
 		}
 
-		$settings      = json_decode( $scan->settings, true ) ?: array();
-		$issues_found  = 0;
-		$scanned_count = 0;
+		$decoded_settings = json_decode( $scan->settings, true );
+		$settings         = $decoded_settings ? $decoded_settings : array();
+		$issues_found     = 0;
+		$scanned_count    = 0;
 
 		$audits = $this->get_audit_instances( $settings );
 
@@ -108,6 +128,9 @@ class APCA_Scanner {
 		);
 	}
 
+	/**
+	 * AJAX handler: return a scan's current status, optionally marking it complete.
+	 */
 	public function ajax_get_scan_status() {
 		check_ajax_referer( 'apca_scan_nonce', 'nonce' );
 
@@ -148,6 +171,12 @@ class APCA_Scanner {
 		);
 	}
 
+	/**
+	 * Query the post IDs to scan based on the configured post types/statuses.
+	 *
+	 * @param array $settings Scan settings.
+	 * @return int[] Post IDs to scan.
+	 */
 	private function get_posts_to_scan( $settings ) {
 		$post_types = isset( $settings['post_types'] ) ? (array) $settings['post_types'] : array( 'post', 'page' );
 		$post_types = array_filter( $post_types );
@@ -175,6 +204,12 @@ class APCA_Scanner {
 		return $query->posts;
 	}
 
+	/**
+	 * Instantiate the audit classes enabled in settings.
+	 *
+	 * @param array $settings Scan settings.
+	 * @return APCA_Abstract_Audit[] Enabled audit instances.
+	 */
 	private function get_audit_instances( $settings ) {
 		$enabled = isset( $settings['enabled_audits'] ) ? (array) $settings['enabled_audits'] : array(
 			'content',
@@ -214,6 +249,11 @@ class APCA_Scanner {
 		return $audits;
 	}
 
+	/**
+	 * Get the plugin's saved settings, merged with defaults.
+	 *
+	 * @return array Settings.
+	 */
 	private function get_settings() {
 		$saved = get_option( 'apca_settings', array() );
 

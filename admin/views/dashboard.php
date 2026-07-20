@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dashboard page view.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template file included inside APCA_Admin; variables are local to the method scope, not truly global.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -43,7 +49,7 @@ $category_icons = array(
 								sprintf(
 									/* translators: 1: time ago, 2: number of posts scanned, 3: number of issues found */
 									__( 'Last scan completed %1$s — %2$s posts scanned, %3$s issues found.', 'auditpilot-content-audit' ),
-									'<strong>' . esc_html( human_time_diff( strtotime( $latest_scan->completed_at ), current_time( 'timestamp' ) ) . ' ' . __( 'ago', 'auditpilot-content-audit' ) ) . '</strong>',
+									'<strong>' . esc_html( human_time_diff( strtotime( $latest_scan->completed_at ), strtotime( current_time( 'mysql' ) ) ) . ' ' . __( 'ago', 'auditpilot-content-audit' ) ) . '</strong>',
 									'<strong>' . esc_html( number_format_i18n( $latest_scan->scanned_posts ) ) . '</strong>',
 									'<strong>' . esc_html( number_format_i18n( $latest_scan->issues_found ) ) . '</strong>'
 								),
