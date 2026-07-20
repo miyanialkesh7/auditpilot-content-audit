@@ -12,6 +12,8 @@
  * Domain Path: /languages
  * Requires at least: 6.8
  * Requires PHP: 7.4
+ *
+ * @package AuditPilot_Content_Audit
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,6 +31,11 @@ define( 'APCA_MIN_PHP', '7.4' );
 require_once APCA_PATH . 'includes/class-apca-plugin.php';
 
 if ( ! function_exists( 'apca_plugin' ) ) {
+	/**
+	 * Get the plugin's singleton instance.
+	 *
+	 * @return APCA_Plugin
+	 */
 	function apca_plugin() {
 		return APCA_Plugin::instance();
 	}

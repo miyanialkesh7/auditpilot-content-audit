@@ -1,12 +1,28 @@
 <?php
+/**
+ * Heading audit: checks for duplicate H1s, skipped heading levels, and missing subheadings.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Audits a post's heading structure for duplicate H1s, skipped levels,
+ * and missing subheadings on long content.
+ */
 class APCA_Heading_Audit extends APCA_Abstract_Audit {
 
 	const CATEGORY = 'headings';
 
+	/**
+	 * Run the heading audit against a single post.
+	 *
+	 * @param WP_Post $post Post to audit.
+	 * @return array List of issues found.
+	 */
 	public function run( $post ) {
 		$issues  = array();
 		$content = $post->post_content;
@@ -30,6 +46,12 @@ class APCA_Heading_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Check content for duplicate or unexpected H1 tags.
+	 *
+	 * @param string $content Post content to scan.
+	 * @return array List of issues found.
+	 */
 	private function check_multiple_h1( $content ) {
 		$issues   = array();
 		$headings = $this->get_headings_from_content( $content );
@@ -62,6 +84,12 @@ class APCA_Heading_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Check content for skipped heading levels (e.g. H2 to H4).
+	 *
+	 * @param string $content Post content to scan.
+	 * @return array List of issues found.
+	 */
 	private function check_heading_structure( $content ) {
 		$issues   = array();
 		$headings = $this->get_headings_from_content( $content );
@@ -82,7 +110,8 @@ class APCA_Heading_Audit extends APCA_Abstract_Audit {
 
 		$heading_levels = array_values( $heading_levels );
 
-		for ( $i = 1; $i < count( $heading_levels ); $i++ ) {
+		$heading_count = count( $heading_levels );
+		for ( $i = 1; $i < $heading_count; $i++ ) {
 			$prev = $heading_levels[ $i - 1 ];
 			$curr = $heading_levels[ $i ];
 
@@ -108,6 +137,13 @@ class APCA_Heading_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Check whether long content is missing subheadings.
+	 *
+	 * @param WP_Post $post    Post being checked (unused; kept for signature consistency with sibling checks).
+	 * @param string  $content Post content to scan.
+	 * @return array|null Issue entry, or null if there's no issue.
+	 */
 	private function check_missing_headings( $post, $content ) {
 		$word_count = str_word_count( wp_strip_all_tags( $content ) );
 

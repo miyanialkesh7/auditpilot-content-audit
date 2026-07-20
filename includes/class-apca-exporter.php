@@ -1,10 +1,24 @@
 <?php
+/**
+ * CSV export of scan results.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Streams a scan's issues to the browser as a downloadable CSV file.
+ */
 class APCA_Exporter {
 
+	/**
+	 * Output a scan's issues as a CSV download and exit.
+	 *
+	 * @param int $scan_id Scan ID to export.
+	 */
 	public static function export_csv( $scan_id ) {
 		$scan = APCA_Database::get_scan( $scan_id );
 		if ( ! $scan ) {

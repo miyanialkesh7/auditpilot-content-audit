@@ -1,5 +1,12 @@
 <?php
+/**
+ * Scan results page view.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template file included inside APCA_Admin; variables are local to the method scope, not truly global.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited -- Same as above: $search/$per_page/$cat are local template variables here, not the WordPress query globals of the same name.
 // phpcs:disable WordPress.Security.NonceVerification.Recommended -- All $_GET params here are read-only display filters; no data is written or deleted. Page is already protected by manage_options capability check in add_submenu_page().
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -56,7 +63,7 @@ $base_url = admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=
 		<h1 class="apca-title">
 			<?php esc_html_e( 'Scan Results', 'auditpilot-content-audit' ); ?>
 			<?php if ( 'completed' === $scan->status ) : ?>
-				<span class="apca-title-meta"><?php echo esc_html( human_time_diff( strtotime( $scan->completed_at ), current_time( 'timestamp' ) ) . ' ' . __( 'ago', 'auditpilot-content-audit' ) ); ?></span>
+				<span class="apca-title-meta"><?php echo esc_html( human_time_diff( strtotime( $scan->completed_at ), strtotime( current_time( 'mysql' ) ) ) . ' ' . __( 'ago', 'auditpilot-content-audit' ) ); ?></span>
 			<?php endif; ?>
 		</h1>
 		<div class="apca-header-actions">
@@ -164,7 +171,11 @@ $base_url = admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=
 		<tbody>
 			<?php foreach ( $issues as $issue ) : ?>
 				<?php
-				/** @var object{id:int,scan_id:int,post_id:int,post_type:string,post_title:string,category:string,severity:string,issue_type:string,message:string,post_url:string} $issue */
+				/**
+				 * Row object returned by APCA_Database::get_issues().
+				 *
+				 * @var object{id:int,scan_id:int,post_id:int,post_type:string,post_title:string,category:string,severity:string,issue_type:string,message:string,post_url:string} $issue
+				 */
 				$post_type_obj = get_post_type_object( $issue->post_type );
 				$pt_label      = $post_type_obj ? $post_type_obj->labels->singular_name : $issue->post_type;
 				?>
@@ -175,7 +186,7 @@ $base_url = admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=
 					</span>
 				</td>
 				<td class="apca-col-post">
-					<strong><?php echo esc_html( $issue->post_title ?: __( '(no title)', 'auditpilot-content-audit' ) ); ?></strong>
+					<strong><?php echo esc_html( $issue->post_title ? $issue->post_title : __( '(no title)', 'auditpilot-content-audit' ) ); ?></strong>
 				</td>
 				<td class="apca-col-type">
 					<?php echo esc_html( $pt_label ); ?>

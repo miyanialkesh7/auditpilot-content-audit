@@ -1,13 +1,26 @@
 <?php
+/**
+ * Database layer: schema management and CRUD for scans and issues.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- All methods in this class operate on custom plugin tables. There is no WordPress API equivalent; direct queries are required. Caching is intentionally omitted for write paths and scan results, which change frequently during active scans.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Manages the plugin's custom database tables and all reads/writes
+ * to scan and issue records.
+ */
 class APCA_Database {
 
 	const DB_VERSION = '1.0';
 
+	/**
+	 * Drop the plugin's custom tables and delete the stored schema version.
+	 */
 	public static function drop_tables() {
 		global $wpdb;
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
@@ -17,6 +30,9 @@ class APCA_Database {
 		delete_option( 'apca_db_version' );
 	}
 
+	/**
+	 * Drop the plugin's tables on deactivation, if the setting is enabled.
+	 */
 	public static function maybe_drop_tables() {
 		$settings = get_option( 'apca_settings', array() );
 		if ( ! empty( $settings['delete_on_deactivation'] ) ) {
@@ -24,6 +40,9 @@ class APCA_Database {
 		}
 	}
 
+	/**
+	 * Create (or update) the plugin's custom tables via dbDelta().
+	 */
 	public static function create_tables() {
 		global $wpdb;
 
@@ -72,6 +91,12 @@ class APCA_Database {
 		update_option( 'apca_db_version', self::DB_VERSION );
 	}
 
+	/**
+	 * Insert a new scan row.
+	 *
+	 * @param array $settings Scan settings, stored as JSON.
+	 * @return int Newly inserted scan ID.
+	 */
 	public static function create_scan( $settings = array() ) {
 		global $wpdb;
 
@@ -88,6 +113,12 @@ class APCA_Database {
 		return $wpdb->insert_id;
 	}
 
+	/**
+	 * Update a scan row.
+	 *
+	 * @param int   $scan_id Scan ID to update.
+	 * @param array $data    Column values to update.
+	 */
 	public static function update_scan( $scan_id, $data ) {
 		global $wpdb;
 
@@ -100,6 +131,12 @@ class APCA_Database {
 		);
 	}
 
+	/**
+	 * Get a single scan by ID.
+	 *
+	 * @param int $scan_id Scan ID.
+	 * @return object|null Scan row, or null if not found.
+	 */
 	public static function get_scan( $scan_id ) {
 		global $wpdb;
 
@@ -108,6 +145,11 @@ class APCA_Database {
 		);
 	}
 
+	/**
+	 * Get the most recently created scan.
+	 *
+	 * @return object|null Scan row, or null if none exist.
+	 */
 	public static function get_latest_scan() {
 		global $wpdb;
 
@@ -116,6 +158,12 @@ class APCA_Database {
 		);
 	}
 
+	/**
+	 * Get the most recent scans.
+	 *
+	 * @param int $limit Maximum number of scans to return.
+	 * @return object[] Scan rows.
+	 */
 	public static function get_scans( $limit = 10 ) {
 		global $wpdb;
 
@@ -127,6 +175,13 @@ class APCA_Database {
 		);
 	}
 
+	/**
+	 * Insert a single issue row for a post found during a scan.
+	 *
+	 * @param int     $scan_id Scan ID the issue belongs to.
+	 * @param WP_Post $post    Post the issue was found on.
+	 * @param array   $issue   Issue data (category, type, severity, message, details).
+	 */
 	public static function insert_issue( $scan_id, $post, $issue ) {
 		global $wpdb;
 
@@ -149,6 +204,11 @@ class APCA_Database {
 		);
 	}
 
+	/**
+	 * Delete all issues belonging to a scan.
+	 *
+	 * @param int $scan_id Scan ID whose issues should be deleted.
+	 */
 	public static function delete_scan_issues( $scan_id ) {
 		global $wpdb;
 
@@ -159,6 +219,15 @@ class APCA_Database {
 		);
 	}
 
+	/**
+	 * Get a filtered, paginated list of issues for a scan.
+	 *
+	 * @param int   $scan_id Scan ID to fetch issues for.
+	 * @param array $args    Filter/sort/pagination args (category, severity,
+	 *                       post_type, issue_type, search, orderby, order,
+	 *                       per_page, page).
+	 * @return array Array with 'items' (object[]), 'total' (int), and 'pages' (int).
+	 */
 	public static function get_issues( $scan_id, $args = array() ) {
 		global $wpdb;
 
@@ -239,6 +308,14 @@ class APCA_Database {
 		);
 	}
 
+	/**
+	 * Get summary counts of issues for a scan, grouped by severity,
+	 * category, and post type.
+	 *
+	 * @param int $scan_id Scan ID.
+	 * @return array Array with 'by_severity', 'by_category', 'by_post_type',
+	 *               and 'posts_with_issues' keys.
+	 */
 	public static function get_summary( $scan_id ) {
 		global $wpdb;
 
@@ -279,6 +356,13 @@ class APCA_Database {
 		);
 	}
 
+	/**
+	 * Calculate per-category and overall content quality scores for a scan.
+	 *
+	 * @param int $scan_id Scan ID.
+	 * @return array|null Array with 'overall' (int) and 'categories' (array
+	 *                     of int scores), or null if the scan has no scanned posts.
+	 */
 	public static function get_score_data( $scan_id ) {
 		global $wpdb;
 
@@ -288,7 +372,7 @@ class APCA_Database {
 		}
 
 		$total_posts = (int) $scan->scanned_posts;
-		if ( $total_posts === 0 ) {
+		if ( 0 === $total_posts ) {
 			return null;
 		}
 
@@ -329,6 +413,12 @@ class APCA_Database {
 		);
 	}
 
+	/**
+	 * Get all issues for a scan, ordered for CSV export.
+	 *
+	 * @param int $scan_id Scan ID.
+	 * @return object[] Issue rows.
+	 */
 	public static function get_all_issues_for_export( $scan_id ) {
 		global $wpdb;
 

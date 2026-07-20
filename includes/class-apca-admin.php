@@ -1,10 +1,24 @@
 <?php
+/**
+ * Admin UI: menu pages, asset enqueuing, settings, export, and view helpers.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Registers the plugin's admin pages and handles admin-side requests
+ * (settings save, CSV export) plus shared label/formatting helpers
+ * used by the admin view templates.
+ */
 class APCA_Admin {
 
+	/**
+	 * Constructor. Registers admin hooks.
+	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
@@ -13,6 +27,9 @@ class APCA_Admin {
 		add_filter( 'plugin_action_links_' . APCA_BASENAME, array( $this, 'add_plugin_links' ) );
 	}
 
+	/**
+	 * Register the plugin's top-level and submenu admin pages.
+	 */
 	public function add_menu_pages() {
 		add_menu_page(
 			__( 'AuditPilot', 'auditpilot-content-audit' ),
@@ -52,6 +69,11 @@ class APCA_Admin {
 		);
 	}
 
+	/**
+	 * Enqueue admin CSS/JS on the plugin's own admin pages.
+	 *
+	 * @param string $hook Current admin page hook suffix.
+	 */
 	public function enqueue_assets( $hook ) {
 		$apca_pages = array(
 			'toplevel_page_auditpilot-content-audit',
@@ -99,18 +121,30 @@ class APCA_Admin {
 		);
 	}
 
+	/**
+	 * Render the dashboard admin page.
+	 */
 	public function render_dashboard() {
 		require_once APCA_PATH . 'admin/views/dashboard.php';
 	}
 
+	/**
+	 * Render the scan results admin page.
+	 */
 	public function render_results() {
 		require_once APCA_PATH . 'admin/views/results.php';
 	}
 
+	/**
+	 * Render the settings admin page.
+	 */
 	public function render_settings() {
 		require_once APCA_PATH . 'admin/views/settings.php';
 	}
 
+	/**
+	 * Handle the CSV export request on admin_init, if one was made.
+	 */
 	public function handle_export() {
 		if (
 			! isset( $_GET['page'], $_GET['action'], $_GET['scan_id'] ) ||
@@ -130,6 +164,9 @@ class APCA_Admin {
 		APCA_Exporter::export_csv( $scan_id );
 	}
 
+	/**
+	 * Save the plugin's settings from the settings page form submission.
+	 */
 	public function save_settings() {
 		if (
 			! isset( $_POST['apca_settings_nonce'] ) ||
@@ -171,6 +208,12 @@ class APCA_Admin {
 		exit;
 	}
 
+	/**
+	 * Add Dashboard/Settings links to the plugin's row on the Plugins page.
+	 *
+	 * @param string[] $links Existing plugin action links.
+	 * @return string[] Modified plugin action links.
+	 */
 	public function add_plugin_links( $links ) {
 		$plugin_links = array(
 			'<a href="' . esc_url( admin_url( 'admin.php?page=auditpilot-content-audit' ) ) . '">' . esc_html__( 'Dashboard', 'auditpilot-content-audit' ) . '</a>',
@@ -179,6 +222,12 @@ class APCA_Admin {
 		return array_merge( $plugin_links, $links );
 	}
 
+	/**
+	 * Get a human-readable label for an issue severity.
+	 *
+	 * @param string $severity Severity slug.
+	 * @return string Display label.
+	 */
 	public static function get_severity_label( $severity ) {
 		$labels = array(
 			'error'   => __( 'Error', 'auditpilot-content-audit' ),
@@ -188,6 +237,12 @@ class APCA_Admin {
 		return isset( $labels[ $severity ] ) ? $labels[ $severity ] : ucfirst( $severity );
 	}
 
+	/**
+	 * Get a human-readable label for an issue category.
+	 *
+	 * @param string $category Category slug.
+	 * @return string Display label.
+	 */
 	public static function get_category_label( $category ) {
 		$labels = array(
 			'content'  => __( 'Content', 'auditpilot-content-audit' ),
@@ -200,6 +255,12 @@ class APCA_Admin {
 		return isset( $labels[ $category ] ) ? $labels[ $category ] : ucfirst( $category );
 	}
 
+	/**
+	 * Get a human-readable label for a scan status.
+	 *
+	 * @param string $status Status slug.
+	 * @return string Display label.
+	 */
 	public static function get_scan_status_label( $status ) {
 		$labels = array(
 			'running'   => __( 'Running', 'auditpilot-content-audit' ),
@@ -209,6 +270,12 @@ class APCA_Admin {
 		return isset( $labels[ $status ] ) ? $labels[ $status ] : ucfirst( $status );
 	}
 
+	/**
+	 * Get a CSS class name for a score, based on its value band.
+	 *
+	 * @param int $score Score value (0-100).
+	 * @return string CSS class: 'good', 'average', or 'poor'.
+	 */
 	public static function get_score_class( $score ) {
 		if ( $score >= 80 ) {
 			return 'good';

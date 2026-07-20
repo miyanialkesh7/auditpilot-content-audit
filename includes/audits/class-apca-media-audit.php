@@ -1,14 +1,34 @@
 <?php
+/**
+ * Media audit: checks for missing alt text, broken media, and oversized images.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Audits a post's media for missing alt text, broken attachment references,
+ * and images over a configurable size threshold.
+ */
 class APCA_Media_Audit extends APCA_Abstract_Audit {
 
 	const CATEGORY = 'media';
 
+	/**
+	 * Audit settings.
+	 *
+	 * @var array
+	 */
 	private $settings;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param array $settings Audit settings.
+	 */
 	public function __construct( $settings = array() ) {
 		$this->settings = wp_parse_args(
 			$settings,
@@ -18,6 +38,12 @@ class APCA_Media_Audit extends APCA_Abstract_Audit {
 		);
 	}
 
+	/**
+	 * Run the media audit against a single post.
+	 *
+	 * @param WP_Post $post Post to audit.
+	 * @return array List of issues found.
+	 */
 	public function run( $post ) {
 		$issues  = array();
 		$content = $post->post_content;
@@ -40,6 +66,12 @@ class APCA_Media_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Check content for images missing alt text.
+	 *
+	 * @param string $content Post content to scan.
+	 * @return array List of issues found.
+	 */
 	private function check_missing_alt_text( $content ) {
 		$issues = array();
 		$images = $this->get_images_from_content( $content );
@@ -73,6 +105,12 @@ class APCA_Media_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Check a post's referenced media attachments for broken or missing files.
+	 *
+	 * @param WP_Post $post Post to check.
+	 * @return array List of issues found.
+	 */
 	private function check_broken_media( $post ) {
 		$issues = array();
 
@@ -114,6 +152,12 @@ class APCA_Media_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Check a post's referenced images against the large-image size threshold.
+	 *
+	 * @param WP_Post $post Post to check.
+	 * @return array List of issues found.
+	 */
 	private function check_large_images( $post ) {
 		$issues    = array();
 		$threshold = (int) $this->settings['large_image_kb'] * 1024;
@@ -163,6 +207,12 @@ class APCA_Media_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Extract attachment IDs referenced in post content.
+	 *
+	 * @param string $content Post content to scan.
+	 * @return int[] Unique attachment IDs found.
+	 */
 	private function get_attachment_ids_in_content( $content ) {
 		$ids = array();
 

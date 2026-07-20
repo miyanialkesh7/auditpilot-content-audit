@@ -1,18 +1,39 @@
 <?php
+/**
+ * SEO audit: checks SEO title, meta description, and Open Graph image.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Audits a post's SEO title, meta description, and Open Graph image,
+ * reading from whichever supported SEO plugin (Yoast, Rank Math, AIOSEO) is active.
+ */
 class APCA_SEO_Audit extends APCA_Abstract_Audit {
 
 	const CATEGORY = 'seo';
 
+	/**
+	 * Slug of the detected active SEO plugin, or null if none is active.
+	 *
+	 * @var string|null
+	 */
 	private $active_plugin = null;
 
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 		$this->detect_seo_plugin();
 	}
 
+	/**
+	 * Detect which supported SEO plugin, if any, is active.
+	 */
 	private function detect_seo_plugin() {
 		if ( defined( 'WPSEO_VERSION' ) ) {
 			$this->active_plugin = 'yoast';
@@ -23,6 +44,12 @@ class APCA_SEO_Audit extends APCA_Abstract_Audit {
 		}
 	}
 
+	/**
+	 * Run the SEO audit against a single post.
+	 *
+	 * @param WP_Post $post Post to audit.
+	 * @return array List of issues found.
+	 */
 	public function run( $post ) {
 		$issues = array();
 
@@ -47,6 +74,12 @@ class APCA_SEO_Audit extends APCA_Abstract_Audit {
 		return $issues;
 	}
 
+	/**
+	 * Check whether the post has a custom SEO title set.
+	 *
+	 * @param WP_Post $post Post to check.
+	 * @return array|null Issue entry, or null if there's no issue.
+	 */
 	private function check_seo_title( $post ) {
 		$title = $this->get_seo_title( $post );
 
@@ -71,6 +104,12 @@ class APCA_SEO_Audit extends APCA_Abstract_Audit {
 		return null;
 	}
 
+	/**
+	 * Check whether the post has a meta description set.
+	 *
+	 * @param WP_Post $post Post to check.
+	 * @return array|null Issue entry, or null if there's no issue.
+	 */
 	private function check_meta_description( $post ) {
 		$desc = $this->get_meta_description( $post );
 
@@ -95,6 +134,12 @@ class APCA_SEO_Audit extends APCA_Abstract_Audit {
 		return null;
 	}
 
+	/**
+	 * Check whether the post has an Open Graph image set.
+	 *
+	 * @param WP_Post $post Post to check.
+	 * @return array|null Issue entry, or null if there's no issue.
+	 */
 	private function check_og_image( $post ) {
 		$image = $this->get_og_image( $post );
 
@@ -125,6 +170,12 @@ class APCA_SEO_Audit extends APCA_Abstract_Audit {
 		return null;
 	}
 
+	/**
+	 * Get the post's SEO title from the active SEO plugin.
+	 *
+	 * @param WP_Post $post Post to read.
+	 * @return string|null SEO title, or null if no supported plugin is active.
+	 */
 	private function get_seo_title( $post ) {
 		switch ( $this->active_plugin ) {
 			case 'yoast':
@@ -142,6 +193,12 @@ class APCA_SEO_Audit extends APCA_Abstract_Audit {
 		}
 	}
 
+	/**
+	 * Get the post's meta description from the active SEO plugin.
+	 *
+	 * @param WP_Post $post Post to read.
+	 * @return string|null Meta description, or null if no supported plugin is active.
+	 */
 	private function get_meta_description( $post ) {
 		switch ( $this->active_plugin ) {
 			case 'yoast':
@@ -158,6 +215,12 @@ class APCA_SEO_Audit extends APCA_Abstract_Audit {
 		}
 	}
 
+	/**
+	 * Get the post's Open Graph image from the active SEO plugin.
+	 *
+	 * @param WP_Post $post Post to read.
+	 * @return string|null Open Graph image URL, or null if no supported plugin is active.
+	 */
 	private function get_og_image( $post ) {
 		switch ( $this->active_plugin ) {
 			case 'yoast':
@@ -174,6 +237,11 @@ class APCA_SEO_Audit extends APCA_Abstract_Audit {
 		}
 	}
 
+	/**
+	 * Get a human-readable name for the active SEO plugin.
+	 *
+	 * @return string Display name.
+	 */
 	private function get_plugin_display_name() {
 		$names = array(
 			'yoast'    => 'Yoast SEO',
@@ -183,6 +251,11 @@ class APCA_SEO_Audit extends APCA_Abstract_Audit {
 		return isset( $names[ $this->active_plugin ] ) ? $names[ $this->active_plugin ] : __( 'your SEO plugin', 'auditpilot-content-audit' );
 	}
 
+	/**
+	 * Get the slug of the detected active SEO plugin.
+	 *
+	 * @return string|null Plugin slug, or null if none is active.
+	 */
 	public function get_active_plugin() {
 		return $this->active_plugin;
 	}

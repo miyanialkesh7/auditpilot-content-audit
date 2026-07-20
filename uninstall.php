@@ -1,4 +1,10 @@
 <?php
+/**
+ * Uninstall routine: removes custom tables and options created by the plugin.
+ *
+ * @package AuditPilot_Content_Audit
+ */
+
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
