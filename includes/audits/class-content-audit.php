@@ -10,10 +10,13 @@ class APCA_Content_Audit extends APCA_Abstract_Audit {
 	private $settings;
 
 	public function __construct( $settings = array() ) {
-		$this->settings = wp_parse_args( $settings, array(
-			'short_content_threshold' => 300,
-			'old_draft_days'          => 30,
-		) );
+		$this->settings = wp_parse_args(
+			$settings,
+			array(
+				'short_content_threshold' => 300,
+				'old_draft_days'          => 30,
+			)
+		);
 	}
 
 	public function run( $post ) {
@@ -110,7 +113,10 @@ class APCA_Content_Audit extends APCA_Abstract_Audit {
 					$word_count,
 					$threshold
 				),
-				array( 'word_count' => $word_count, 'threshold' => $threshold )
+				array(
+					'word_count' => $word_count,
+					'threshold'  => $threshold,
+				)
 			);
 		}
 

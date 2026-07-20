@@ -78,21 +78,25 @@ class APCA_Admin {
 			true
 		);
 
-		wp_localize_script( 'apca-admin', 'apcaData', array(
-			'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
-			'nonce'    => wp_create_nonce( 'apca_scan_nonce' ),
-			'batchSize' => 10,
-			'i18n'     => array(
-				'scanning'    => __( 'Scanning...', 'auditpilot-content-audit' ),
-				'complete'    => __( 'Scan complete!', 'auditpilot-content-audit' ),
-				'error'       => __( 'An error occurred during scanning.', 'auditpilot-content-audit' ),
-				'starting'    => __( 'Preparing scan...', 'auditpilot-content-audit' ),
-				/* translators: 1: current post number being scanned, 2: total posts to scan */
-				'progress'    => __( 'Scanning post %1$d of %2$d...', 'auditpilot-content-audit' ),
-				'redirecting' => __( 'Redirecting to results...', 'auditpilot-content-audit' ),
-				'startScan'   => __( 'Start New Scan', 'auditpilot-content-audit' ),
-			),
-		) );
+		wp_localize_script(
+			'apca-admin',
+			'apcaData',
+			array(
+				'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
+				'nonce'     => wp_create_nonce( 'apca_scan_nonce' ),
+				'batchSize' => 10,
+				'i18n'      => array(
+					'scanning'    => __( 'Scanning...', 'auditpilot-content-audit' ),
+					'complete'    => __( 'Scan complete!', 'auditpilot-content-audit' ),
+					'error'       => __( 'An error occurred during scanning.', 'auditpilot-content-audit' ),
+					'starting'    => __( 'Preparing scan...', 'auditpilot-content-audit' ),
+					/* translators: 1: current post number being scanned, 2: total posts to scan */
+					'progress'    => __( 'Scanning post %1$d of %2$d...', 'auditpilot-content-audit' ),
+					'redirecting' => __( 'Redirecting to results...', 'auditpilot-content-audit' ),
+					'startScan'   => __( 'Start New Scan', 'auditpilot-content-audit' ),
+				),
+			)
+		);
 	}
 
 	public function render_dashboard() {
@@ -138,8 +142,8 @@ class APCA_Admin {
 			return;
 		}
 
-		$post_types = isset( $_POST['post_types'] ) ? array_map( 'sanitize_key', (array) $_POST['post_types'] ) : array();
-		$post_statuses = isset( $_POST['post_statuses'] ) ? array_map( 'sanitize_key', (array) $_POST['post_statuses'] ) : array();
+		$post_types     = isset( $_POST['post_types'] ) ? array_map( 'sanitize_key', (array) $_POST['post_types'] ) : array();
+		$post_statuses  = isset( $_POST['post_statuses'] ) ? array_map( 'sanitize_key', (array) $_POST['post_statuses'] ) : array();
 		$enabled_audits = isset( $_POST['enabled_audits'] ) ? array_map( 'sanitize_key', (array) $_POST['enabled_audits'] ) : array();
 
 		$settings = array(
@@ -155,10 +159,15 @@ class APCA_Admin {
 
 		update_option( 'apca_settings', $settings );
 
-		wp_safe_redirect( add_query_arg( array(
-			'page'    => 'auditpilot-content-audit-settings',
-			'updated' => '1',
-		), admin_url( 'admin.php' ) ) );
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'page'    => 'auditpilot-content-audit-settings',
+					'updated' => '1',
+				),
+				admin_url( 'admin.php' )
+			)
+		);
 		exit;
 	}
 

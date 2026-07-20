@@ -4,10 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$latest_scan  = APCA_Database::get_latest_scan();
-$score_data   = null;
-$summary      = null;
-$settings     = get_option( 'apca_settings', array() );
+$latest_scan = APCA_Database::get_latest_scan();
+$score_data  = null;
+$summary     = null;
+$settings    = get_option( 'apca_settings', array() );
 
 if ( $latest_scan && 'completed' === $latest_scan->status ) {
 	$score_data = APCA_Database::get_score_data( $latest_scan->id );
@@ -107,7 +107,11 @@ $category_icons = array(
 
 		<div class="apca-stats-grid">
 			<?php
-			$severity_counts = array( 'error' => 0, 'warning' => 0, 'info' => 0 );
+			$severity_counts = array(
+				'error'   => 0,
+				'warning' => 0,
+				'info'    => 0,
+			);
 			if ( ! empty( $summary['by_severity'] ) ) {
 				foreach ( $summary['by_severity'] as $sev => $row ) {
 					$severity_counts[ $sev ] = (int) $row->count;
@@ -140,7 +144,11 @@ $category_icons = array(
 				$category_totals = array();
 				foreach ( $summary['by_category'] as $row ) {
 					if ( ! isset( $category_totals[ $row->category ] ) ) {
-						$category_totals[ $row->category ] = array( 'error' => 0, 'warning' => 0, 'info' => 0 );
+						$category_totals[ $row->category ] = array(
+							'error'   => 0,
+							'warning' => 0,
+							'info'    => 0,
+						);
 					}
 					$category_totals[ $row->category ][ $row->severity ] = (int) $row->count;
 				}
@@ -148,22 +156,22 @@ $category_icons = array(
 				foreach ( $category_totals as $category => $counts ) :
 					$total = array_sum( $counts );
 					$icon  = isset( $category_icons[ $category ] ) ? $category_icons[ $category ] : '📋';
-				?>
+					?>
 				<div class="apca-category-card">
 					<div class="apca-category-header">
 						<span class="apca-category-icon"><?php echo esc_html( $icon ); ?></span>
 						<span class="apca-category-name"><?php echo esc_html( APCA_Admin::get_category_label( $category ) ); ?></span>
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=' . $latest_scan->id . '&category=' . $category ) ); ?>" class="apca-category-count"><?php echo esc_html( $total ); ?></a>
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=' . $latest_scan->id . '&category=' . $category ) ); ?>" class="apca-category-count"><?php echo esc_html( (string) $total ); ?></a>
 					</div>
 					<div class="apca-category-badges">
 						<?php if ( $counts['error'] > 0 ) : ?>
-							<span class="apca-badge apca-badge-error"><?php echo esc_html( $counts['error'] ); ?> <?php esc_html_e( 'errors', 'auditpilot-content-audit' ); ?></span>
+							<span class="apca-badge apca-badge-error"><?php echo esc_html( (string) $counts['error'] ); ?> <?php esc_html_e( 'errors', 'auditpilot-content-audit' ); ?></span>
 						<?php endif; ?>
 						<?php if ( $counts['warning'] > 0 ) : ?>
-							<span class="apca-badge apca-badge-warning"><?php echo esc_html( $counts['warning'] ); ?> <?php esc_html_e( 'warnings', 'auditpilot-content-audit' ); ?></span>
+							<span class="apca-badge apca-badge-warning"><?php echo esc_html( (string) $counts['warning'] ); ?> <?php esc_html_e( 'warnings', 'auditpilot-content-audit' ); ?></span>
 						<?php endif; ?>
 						<?php if ( $counts['info'] > 0 ) : ?>
-							<span class="apca-badge apca-badge-info"><?php echo esc_html( $counts['info'] ); ?> <?php esc_html_e( 'info', 'auditpilot-content-audit' ); ?></span>
+							<span class="apca-badge apca-badge-info"><?php echo esc_html( (string) $counts['info'] ); ?> <?php esc_html_e( 'info', 'auditpilot-content-audit' ); ?></span>
 						<?php endif; ?>
 					</div>
 				</div>
@@ -195,7 +203,7 @@ $category_icons = array(
 		<?php
 		$scans = APCA_Database::get_scans( 5 );
 		if ( count( $scans ) > 1 ) :
-		?>
+			?>
 		<h3><?php esc_html_e( 'Recent Scans', 'auditpilot-content-audit' ); ?></h3>
 		<table class="wp-list-table widefat fixed striped">
 			<thead>

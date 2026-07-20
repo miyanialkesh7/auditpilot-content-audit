@@ -42,5 +42,4 @@ class APCA_Plugin {
 			new APCA_Scanner();
 		}
 	}
-
 }

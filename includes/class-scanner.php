@@ -28,16 +28,21 @@ class APCA_Scanner {
 
 		$scan_id = APCA_Database::create_scan( $settings );
 
-		APCA_Database::update_scan( $scan_id, array(
-			'total_posts'  => count( $post_ids ),
-			'status'       => 'running',
-		) );
+		APCA_Database::update_scan(
+			$scan_id,
+			array(
+				'total_posts' => count( $post_ids ),
+				'status'      => 'running',
+			)
+		);
 
-		wp_send_json_success( array(
-			'scan_id'  => $scan_id,
-			'post_ids' => $post_ids,
-			'total'    => count( $post_ids ),
-		) );
+		wp_send_json_success(
+			array(
+				'scan_id'  => $scan_id,
+				'post_ids' => $post_ids,
+				'total'    => count( $post_ids ),
+			)
+		);
 	}
 
 	public function ajax_scan_batch() {
@@ -78,25 +83,29 @@ class APCA_Scanner {
 
 			foreach ( $post_issues as $issue ) {
 				APCA_Database::insert_issue( $scan_id, $post, $issue );
-				$issues_found++;
+				++$issues_found;
 			}
 
-			$scanned_count++;
+			++$scanned_count;
 		}
 
 		global $wpdb;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Atomic counter increment on a custom table; no WordPress API equivalent.
-		$wpdb->query( $wpdb->prepare(
-			"UPDATE {$wpdb->prefix}apca_scans SET scanned_posts = scanned_posts + %d, issues_found = issues_found + %d WHERE id = %d",
-			$scanned_count,
-			$issues_found,
-			$scan_id
-		) );
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$wpdb->prefix}apca_scans SET scanned_posts = scanned_posts + %d, issues_found = issues_found + %d WHERE id = %d",
+				$scanned_count,
+				$issues_found,
+				$scan_id
+			)
+		);
 
-		wp_send_json_success( array(
-			'scanned'      => $scanned_count,
-			'issues_found' => $issues_found,
-		) );
+		wp_send_json_success(
+			array(
+				'scanned'      => $scanned_count,
+				'issues_found' => $issues_found,
+			)
+		);
 	}
 
 	public function ajax_get_scan_status() {
@@ -120,18 +129,23 @@ class APCA_Scanner {
 		$is_complete = isset( $_POST['complete'] ) && '1' === $_POST['complete'];
 
 		if ( $is_complete && 'running' === $scan->status ) {
-			APCA_Database::update_scan( $scan_id, array(
-				'status'       => 'completed',
-				'completed_at' => current_time( 'mysql' ),
-			) );
+			APCA_Database::update_scan(
+				$scan_id,
+				array(
+					'status'       => 'completed',
+					'completed_at' => current_time( 'mysql' ),
+				)
+			);
 			$scan->status       = 'completed';
 			$scan->completed_at = current_time( 'mysql' );
 		}
 
-		wp_send_json_success( array(
-			'scan'    => $scan,
-			'results_url' => admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=' . $scan_id ),
-		) );
+		wp_send_json_success(
+			array(
+				'scan'        => $scan,
+				'results_url' => admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=' . $scan_id ),
+			)
+		);
 	}
 
 	private function get_posts_to_scan( $settings ) {
@@ -163,7 +177,12 @@ class APCA_Scanner {
 
 	private function get_audit_instances( $settings ) {
 		$enabled = isset( $settings['enabled_audits'] ) ? (array) $settings['enabled_audits'] : array(
-			'content', 'media', 'headings', 'links', 'seo', 'builder',
+			'content',
+			'media',
+			'headings',
+			'links',
+			'seo',
+			'builder',
 		);
 
 		$audits = array();
@@ -198,14 +217,17 @@ class APCA_Scanner {
 	private function get_settings() {
 		$saved = get_option( 'apca_settings', array() );
 
-		return wp_parse_args( $saved, array(
-			'post_types'             => array( 'post', 'page' ),
-			'post_statuses'          => array( 'publish' ),
-			'short_content_threshold' => 300,
-			'old_draft_days'         => 30,
-			'large_image_kb'         => 500,
-			'check_external_links'   => false,
-			'enabled_audits'         => array( 'content', 'media', 'headings', 'links', 'seo', 'builder' ),
-		) );
+		return wp_parse_args(
+			$saved,
+			array(
+				'post_types'              => array( 'post', 'page' ),
+				'post_statuses'           => array( 'publish' ),
+				'short_content_threshold' => 300,
+				'old_draft_days'          => 30,
+				'large_image_kb'          => 500,
+				'check_external_links'    => false,
+				'enabled_audits'          => array( 'content', 'media', 'headings', 'links', 'seo', 'builder' ),
+			)
+		);
 	}
 }

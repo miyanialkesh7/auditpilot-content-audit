@@ -10,9 +10,12 @@ class APCA_Media_Audit extends APCA_Abstract_Audit {
 	private $settings;
 
 	public function __construct( $settings = array() ) {
-		$this->settings = wp_parse_args( $settings, array(
-			'large_image_kb' => 500,
-		) );
+		$this->settings = wp_parse_args(
+			$settings,
+			array(
+				'large_image_kb' => 500,
+			)
+		);
 	}
 
 	public function run( $post ) {
@@ -45,7 +48,7 @@ class APCA_Media_Audit extends APCA_Abstract_Audit {
 		foreach ( $images as $img_tag ) {
 			$alt = $this->extract_attr( $img_tag, 'alt' );
 			if ( '' === trim( $alt ) ) {
-				$count++;
+				++$count;
 			}
 		}
 
@@ -100,7 +103,10 @@ class APCA_Media_Audit extends APCA_Abstract_Audit {
 						__( 'Media file (ID: %d) is missing from the server.', 'auditpilot-content-audit' ),
 						$attachment_id
 					),
-					array( 'attachment_id' => $attachment_id, 'file' => basename( $file ) )
+					array(
+						'attachment_id' => $attachment_id,
+						'file'          => basename( $file ),
+					)
 				);
 			}
 		}
@@ -134,7 +140,7 @@ class APCA_Media_Audit extends APCA_Abstract_Audit {
 
 			$size = filesize( $file );
 			if ( $size > $threshold ) {
-				$size_kb = round( $size / 1024 );
+				$size_kb  = round( $size / 1024 );
 				$issues[] = $this->issue(
 					'large_image',
 					'warning',
