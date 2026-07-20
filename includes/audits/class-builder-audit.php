@@ -63,7 +63,7 @@ class APCA_Builder_Audit extends APCA_Abstract_Audit {
 				continue;
 			}
 
-			$inner_html = trim( $block['innerHTML'] ?? '' );
+			$inner_html    = trim( $block['innerHTML'] ?? '' );
 			$inner_content = trim( implode( '', $block['innerContent'] ?? array() ) );
 
 			$text = wp_strip_all_tags( $inner_html ?: $inner_content );
@@ -84,7 +84,7 @@ class APCA_Builder_Audit extends APCA_Abstract_Audit {
 			if ( empty( $text ) && empty( $block['innerBlocks'] ) ) {
 				$has_media = isset( $block['attrs']['id'] ) || isset( $block['attrs']['url'] ) || isset( $block['attrs']['src'] );
 				if ( ! $has_media ) {
-					$count++;
+					++$count;
 				}
 			}
 
@@ -164,7 +164,7 @@ class APCA_Builder_Audit extends APCA_Abstract_Audit {
 				}
 
 				if ( $is_empty ) {
-					$count++;
+					++$count;
 				}
 			}
 

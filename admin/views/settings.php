@@ -4,15 +4,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$settings = wp_parse_args( get_option( 'apca_settings', array() ), array(
-	'post_types'              => array( 'post', 'page' ),
-	'post_statuses'           => array( 'publish' ),
-	'enabled_audits'          => array( 'content', 'media', 'headings', 'links', 'seo', 'builder' ),
-	'short_content_threshold' => 300,
-	'old_draft_days'          => 30,
-	'large_image_kb'          => 500,
-	'check_external_links'    => false,
-) );
+$settings = wp_parse_args(
+	get_option( 'apca_settings', array() ),
+	array(
+		'post_types'              => array( 'post', 'page' ),
+		'post_statuses'           => array( 'publish' ),
+		'enabled_audits'          => array( 'content', 'media', 'headings', 'links', 'seo', 'builder' ),
+		'short_content_threshold' => 300,
+		'old_draft_days'          => 30,
+		'large_image_kb'          => 500,
+		'check_external_links'    => false,
+	)
+);
 
 $all_post_types = get_post_types( array( 'public' => true ), 'objects' );
 $all_statuses   = array(

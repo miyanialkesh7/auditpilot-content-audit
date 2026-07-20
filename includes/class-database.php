@@ -29,7 +29,7 @@ class APCA_Database {
 
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$scans_table = $wpdb->prefix . 'apca_scans';
+		$scans_table  = $wpdb->prefix . 'apca_scans';
 		$issues_table = $wpdb->prefix . 'apca_issues';
 
 		$sql_scans = "CREATE TABLE $scans_table (
@@ -177,8 +177,8 @@ class APCA_Database {
 		$args = wp_parse_args( $args, $defaults );
 
 		$allowed_orderby = array( 'post_title', 'post_type', 'severity', 'category', 'issue_type', 'created_at' );
-		$orderby = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'post_title';
-		$order   = 'DESC' === strtoupper( $args['order'] ) ? 'DESC' : 'ASC';
+		$orderby         = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'post_title';
+		$order           = 'DESC' === strtoupper( $args['order'] ) ? 'DESC' : 'ASC';
 
 		$offset   = ( max( 1, (int) $args['page'] ) - 1 ) * (int) $args['per_page'];
 		$per_page = (int) $args['per_page'];
@@ -316,8 +316,8 @@ class APCA_Database {
 				$deductions += (int) $row->cnt * $weight;
 			}
 
-			$max_deductions = $total_posts * 20;
-			$raw_score      = max( 0, 100 - ( $max_deductions > 0 ? ( $deductions / $max_deductions ) * 100 : 0 ) );
+			$max_deductions      = $total_posts * 20;
+			$raw_score           = max( 0, 100 - ( $max_deductions > 0 ? ( $deductions / $max_deductions ) * 100 : 0 ) );
 			$scores[ $category ] = (int) round( $raw_score );
 		}
 

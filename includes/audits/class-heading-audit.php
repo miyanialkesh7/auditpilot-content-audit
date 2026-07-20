@@ -33,9 +33,12 @@ class APCA_Heading_Audit extends APCA_Abstract_Audit {
 	private function check_multiple_h1( $content ) {
 		$issues   = array();
 		$headings = $this->get_headings_from_content( $content );
-		$h1s      = array_filter( $headings, function( $h ) {
-			return 'h1' === $h['tag'];
-		} );
+		$h1s      = array_filter(
+			$headings,
+			function ( $h ) {
+				return 'h1' === $h['tag'];
+			}
+		);
 
 		if ( count( $h1s ) > 1 ) {
 			$issues[] = $this->issue(
@@ -63,13 +66,19 @@ class APCA_Heading_Audit extends APCA_Abstract_Audit {
 		$issues   = array();
 		$headings = $this->get_headings_from_content( $content );
 
-		$heading_levels = array_map( function( $h ) {
-			return (int) substr( $h['tag'], 1 );
-		}, $headings );
+		$heading_levels = array_map(
+			function ( $h ) {
+				return (int) substr( $h['tag'], 1 );
+			},
+			$headings
+		);
 
-		$heading_levels = array_filter( $heading_levels, function( $l ) {
-			return $l >= 2;
-		} );
+		$heading_levels = array_filter(
+			$heading_levels,
+			function ( $l ) {
+				return $l >= 2;
+			}
+		);
 
 		$heading_levels = array_values( $heading_levels );
 
@@ -87,7 +96,10 @@ class APCA_Heading_Audit extends APCA_Abstract_Audit {
 						$prev,
 						$curr
 					),
-					array( 'from' => $prev, 'to' => $curr )
+					array(
+						'from' => $prev,
+						'to'   => $curr,
+					)
 				);
 				break;
 			}

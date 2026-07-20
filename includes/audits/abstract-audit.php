@@ -51,7 +51,7 @@ abstract class APCA_Abstract_Audit {
 
 		if ( preg_match_all( '/<a[^>]*>/i', $content, $matches ) ) {
 			foreach ( $matches[0] as $tag ) {
-				$href  = $this->extract_attr( $tag, 'href' );
+				$href    = $this->extract_attr( $tag, 'href' );
 				$links[] = array(
 					'tag'  => $tag,
 					'href' => $href,
@@ -79,7 +79,7 @@ abstract class APCA_Abstract_Audit {
 	}
 
 	protected function is_url_internal( $url ) {
-		$home = home_url();
+		$home        = home_url();
 		$parsed_home = wp_parse_url( $home );
 		$parsed_url  = wp_parse_url( $url );
 

@@ -29,15 +29,18 @@ $search            = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GE
 $current_page      = isset( $_GET['paged'] ) ? max( 1, (int) $_GET['paged'] ) : 1;
 $per_page          = 25;
 
-$result = APCA_Database::get_issues( $scan_id, array(
-	'category'   => $filter_category,
-	'severity'   => $filter_severity,
-	'post_type'  => $filter_post_type,
-	'issue_type' => $filter_issue_type,
-	'search'     => $search,
-	'per_page'   => $per_page,
-	'page'       => $current_page,
-) );
+$result = APCA_Database::get_issues(
+	$scan_id,
+	array(
+		'category'   => $filter_category,
+		'severity'   => $filter_severity,
+		'post_type'  => $filter_post_type,
+		'issue_type' => $filter_issue_type,
+		'search'     => $search,
+		'per_page'   => $per_page,
+		'page'       => $current_page,
+	)
+);
 
 $issues      = $result['items'];
 $total       = $result['total'];
@@ -80,7 +83,7 @@ $base_url = admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=
 	<div class="apca-filters-bar">
 		<form method="get" class="apca-filters-form">
 			<input type="hidden" name="page" value="auditpilot-content-audit-results">
-			<input type="hidden" name="scan_id" value="<?php echo esc_attr( $scan_id ); ?>">
+			<input type="hidden" name="scan_id" value="<?php echo esc_attr( (string) $scan_id ); ?>">
 
 			<input type="search" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search posts or messages...', 'auditpilot-content-audit' ); ?>" class="apca-search-input">
 
@@ -107,7 +110,8 @@ $base_url = admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=
 					$post_types_in_results[ $pt->post_type ] = get_post_type_object( $pt->post_type );
 				}
 			}
-			if ( ! empty( $post_types_in_results ) ) : ?>
+			if ( ! empty( $post_types_in_results ) ) :
+				?>
 			<select name="post_type">
 				<option value=""><?php esc_html_e( 'All Post Types', 'auditpilot-content-audit' ); ?></option>
 				<?php foreach ( $post_types_in_results as $pt_slug => $pt_obj ) : ?>
@@ -158,10 +162,12 @@ $base_url = admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ( $issues as $issue ) :
+			<?php foreach ( $issues as $issue ) : ?>
+				<?php
+				/** @var object{id:int,scan_id:int,post_id:int,post_type:string,post_title:string,category:string,severity:string,issue_type:string,message:string,post_url:string} $issue */
 				$post_type_obj = get_post_type_object( $issue->post_type );
 				$pt_label      = $post_type_obj ? $post_type_obj->labels->singular_name : $issue->post_type;
-			?>
+				?>
 			<tr class="apca-issue-row apca-issue-<?php echo esc_attr( $issue->severity ); ?>">
 				<td class="apca-col-severity">
 					<span class="apca-severity-badge apca-severity-<?php echo esc_attr( $issue->severity ); ?>">
@@ -197,26 +203,27 @@ $base_url = admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=
 		</tbody>
 	</table>
 
-	<?php if ( $total_pages > 1 ) :
-		$pagination_args = array(
-			'base'      => add_query_arg( 'paged', '%#%', $base_url ),
-			'format'    => '',
-			'prev_text' => '&laquo;',
-			'next_text' => '&raquo;',
-			'total'     => $total_pages,
-			'current'   => $current_page,
-		);
-		if ( $filter_category ) {
-			$pagination_args['base'] = add_query_arg( 'category', $filter_category, $pagination_args['base'] );
-		}
-		if ( $filter_severity ) {
-			$pagination_args['base'] = add_query_arg( 'severity', $filter_severity, $pagination_args['base'] );
-		}
-		?>
+		<?php
+		if ( $total_pages > 1 ) :
+			$pagination_args = array(
+				'base'      => add_query_arg( 'paged', '%#%', $base_url ),
+				'format'    => '',
+				'prev_text' => '&laquo;',
+				'next_text' => '&raquo;',
+				'total'     => $total_pages,
+				'current'   => $current_page,
+			);
+			if ( $filter_category ) {
+				$pagination_args['base'] = add_query_arg( 'category', $filter_category, $pagination_args['base'] );
+			}
+			if ( $filter_severity ) {
+				$pagination_args['base'] = add_query_arg( 'severity', $filter_severity, $pagination_args['base'] );
+			}
+			?>
 	<div class="apca-pagination">
-		<?php echo paginate_links( $pagination_args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo paginate_links( $pagination_args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
-	<?php endif; ?>
+		<?php endif; ?>
 
 	<?php endif; ?>
 </div>

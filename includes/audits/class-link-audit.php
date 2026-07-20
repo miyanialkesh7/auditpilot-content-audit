@@ -11,10 +11,13 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 	private static $checked_urls = array();
 
 	public function __construct( $settings = array() ) {
-		$this->settings = wp_parse_args( $settings, array(
-			'check_external_links' => false,
-			'external_link_timeout' => 5,
-		) );
+		$this->settings = wp_parse_args(
+			$settings,
+			array(
+				'check_external_links'  => false,
+				'external_link_timeout' => 5,
+			)
+		);
 	}
 
 	public function run( $post ) {
@@ -49,7 +52,7 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 		foreach ( $links as $link ) {
 			$href = trim( $link['href'] );
 			if ( '' === $href || '#' === $href || 'javascript:void(0)' === strtolower( $href ) || 'javascript:;' === strtolower( $href ) ) {
-				$count++;
+				++$count;
 			}
 		}
 
@@ -93,7 +96,7 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 				continue;
 			}
 
-			$path = $this->get_path_from_url( $href );
+			$path        = $this->get_path_from_url( $href );
 			$post_exists = $this->internal_url_exists( $path );
 
 			if ( ! $post_exists ) {
@@ -142,7 +145,7 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 			if ( isset( self::$checked_urls[ $base_url ] ) ) {
 				$status = self::$checked_urls[ $base_url ];
 			} else {
-				$status = $this->check_url_status( $base_url );
+				$status                          = $this->check_url_status( $base_url );
 				self::$checked_urls[ $base_url ] = $status;
 			}
 
@@ -158,7 +161,10 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 						esc_url( $href ),
 						$status
 					),
-					array( 'url' => $href, 'status' => $status )
+					array(
+						'url'    => $href,
+						'status' => $status,
+					)
 				);
 			} elseif ( $status >= 300 ) {
 				$issues[] = $this->issue(
@@ -170,7 +176,10 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 						esc_url( $href ),
 						$status
 					),
-					array( 'url' => $href, 'status' => $status )
+					array(
+						'url'    => $href,
+						'status' => $status,
+					)
 				);
 			}
 		}
@@ -195,7 +204,7 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 			return true;
 		}
 
-		$slug             = basename( rtrim( $path, '/' ) );
+		$slug              = basename( rtrim( $path, '/' ) );
 		$public_taxonomies = get_taxonomies( array( 'public' => true ) );
 
 		foreach ( $public_taxonomies as $taxonomy ) {
@@ -210,11 +219,14 @@ class APCA_Link_Audit extends APCA_Abstract_Audit {
 	private function check_url_status( $url ) {
 		$timeout = isset( $this->settings['external_link_timeout'] ) ? (int) $this->settings['external_link_timeout'] : 5;
 
-		$response = wp_remote_head( $url, array(
-			'timeout'     => $timeout,
-			'user-agent'  => 'Mozilla/5.0 (compatible; ContentAuditWP/' . APCA_VERSION . ')',
-			'redirection' => 0,
-		) );
+		$response = wp_remote_head(
+			$url,
+			array(
+				'timeout'     => $timeout,
+				'user-agent'  => 'Mozilla/5.0 (compatible; ContentAuditWP/' . APCA_VERSION . ')',
+				'redirection' => 0,
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return 0;
