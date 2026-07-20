@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4"
+        "php": ">=8.1"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.9",
@@ -28,7 +28,7 @@
             "dealerdirect/phpcodesniffer-composer-installer": true
         },
         "platform": {
-            "php": "7.4"
+            "php": "8.1"
         }
     },
     "scripts": {
@@ -36,6 +36,6 @@
         "lint:fix": "phpcbf",
         "analyse": "phpstan analyse --memory-limit=1G",
         "test": "phpunit",
-        "compat": "phpcs --standard=PHPCompatibilityWP --runtime-set testVersion 7.4- --extensions=php --ignore=vendor,tests ."
+        "compat": "phpcs --standard=PHPCompatibilityWP --runtime-set testVersion 8.1- --extensions=php --ignore=vendor,tests ."
     }
 }

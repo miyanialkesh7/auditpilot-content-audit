@@ -3,8 +3,8 @@ Contributors: alkesh7
 Tags: content audit, seo audit, broken links, alt text, site audit
 Requires at least: 6.8
 Tested up to: 7.0
-Requires PHP: 7.4
-Stable tag: 1.0.0
+Requires PHP: 8.1
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,10 +207,17 @@ Yes. The plugin is fully internationalized and ships with a `.pot` template file
 
 == Changelog ==
 
+= 1.0.1 =
+* Increased minimum required PHP version to 8.1.
+* Internal code quality improvements: added automated linting (WordPress Coding Standards), static analysis (PHPStan), and test coverage to the development workflow. No user-facing behavior changes.
+
 = 1.0.0 =
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Now requires PHP 8.1 or higher. If your host runs PHP 7.4–8.0, upgrade PHP before updating this plugin.
 
 = 1.0.0 =
 First release of AuditPilot – Smart Content Audit for WordPress. Install and run your first scan to discover content issues across your site.
