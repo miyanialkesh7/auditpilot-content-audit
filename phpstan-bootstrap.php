@@ -25,5 +25,5 @@ if ( ! defined( 'APCA_MIN_WP' ) ) {
 	define( 'APCA_MIN_WP', '6.8' );
 }
 if ( ! defined( 'APCA_MIN_PHP' ) ) {
-	define( 'APCA_MIN_PHP', '7.4' );
+	define( 'APCA_MIN_PHP', '8.1' );
 }
