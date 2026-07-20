@@ -11,3 +11,10 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Composer
+/vendor/
+
+# PHPCS cache
+.phpcs-cache
+.phpunit.result.cache

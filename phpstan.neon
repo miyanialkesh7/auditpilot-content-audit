@@ -1,0 +1,16 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        - auditpilot-content-audit.php
+        - uninstall.php
+        - includes
+        - admin
+    excludePaths:
+        - vendor/*
+        - tests/*
+    bootstrapFiles:
+        - vendor/szepeviktor/phpstan-wordpress/bootstrap.php
+        - phpstan-bootstrap.php
