@@ -64,10 +64,22 @@ class APCA_Plugin {
 	private function register_hooks() {
 		register_activation_hook( APCA_FILE, array( 'APCA_Database', 'create_tables' ) );
 		register_deactivation_hook( APCA_FILE, array( 'APCA_Database', 'maybe_drop_tables' ) );
+		add_action( 'wp_initialize_site', array( $this, 'create_tables_for_new_site' ) );
 
 		if ( is_admin() ) {
 			new APCA_Admin();
 			new APCA_Scanner();
 		}
+	}
+
+	/**
+	 * Create the plugin's custom tables when a new Multisite sub-site is created.
+	 *
+	 * @param WP_Site $new_site Newly created site object.
+	 */
+	public function create_tables_for_new_site( $new_site ) {
+		switch_to_blog( (int) $new_site->blog_id );
+		APCA_Database::create_tables();
+		restore_current_blog();
 	}
 }

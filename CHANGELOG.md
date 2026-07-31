@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-07-31
+
+### Security
+
+- Rewrote the `DROP TABLE` statements in `APCA_Database::drop_tables()` and `uninstall.php` to use `$wpdb->prepare()` with `%i` identifier placeholders instead of raw string interpolation.
+
+### Fixed
+
+- Eliminated an N+1 query pattern in `APCA_Database::get_score_data()`: category scores are now computed from a single grouped query instead of one query per category.
+
+### Added
+
+- Multisite compatibility: plugin tables are now created automatically on new sub-sites via `wp_initialize_site`.
+- Accessible labels (`aria-label`) on the results page search input and settings page checkboxes.
+
+### Changed
+
+- Renamed the plugin to "AuditPilot – Smart Content Audit" (dropped "for WordPress") to comply with WordPress.org trademark guidelines.
+- Corrected the readme license identifier to the SPDX form `GPL-2.0-or-later`.
+- Excluded `.wordpress-org/` from release builds via `.distignore`.
+
 ## [1.0.1] - 2026-07-20
 
 ### Changed

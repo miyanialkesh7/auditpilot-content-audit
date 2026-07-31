@@ -92,7 +92,7 @@ $base_url = admin_url( 'admin.php?page=auditpilot-content-audit-results&scan_id=
 			<input type="hidden" name="page" value="auditpilot-content-audit-results">
 			<input type="hidden" name="scan_id" value="<?php echo esc_attr( (string) $scan_id ); ?>">
 
-			<input type="search" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search posts or messages...', 'auditpilot-content-audit' ); ?>" class="apca-search-input">
+			<input type="search" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search posts or messages...', 'auditpilot-content-audit' ); ?>" aria-label="<?php esc_attr_e( 'Search posts or messages', 'auditpilot-content-audit' ); ?>" class="apca-search-input">
 
 			<select name="category">
 				<option value=""><?php esc_html_e( 'All Categories', 'auditpilot-content-audit' ); ?></option>

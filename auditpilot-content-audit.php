@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: AuditPilot – Smart Content Audit for WordPress
+ * Plugin Name: AuditPilot – Smart Content Audit
  * Plugin URI: https://wordpress.org/plugins/auditpilot-content-audit/
  * Description: Audit your WordPress content for SEO, accessibility, quality, and best practices.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Alkesh Miyani
  * Author URI: https://miyanialkesh7.com
  * License: GPL v2 or later
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APCA_VERSION', '1.0.1' );
+define( 'APCA_VERSION', '1.0.2' );
 define( 'APCA_FILE', __FILE__ );
 define( 'APCA_PATH', plugin_dir_path( __FILE__ ) );
 define( 'APCA_URL', plugin_dir_url( __FILE__ ) );

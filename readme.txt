@@ -1,11 +1,11 @@
-=== AuditPilot – Smart Content Audit for WordPress ===
+=== AuditPilot – Smart Content Audit ===
 Contributors: alkesh7
 Tags: content audit, seo audit, broken links, alt text, site audit
 Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.1
-License: GPLv2 or later
+Stable tag: 1.0.2
+License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Audit every page, post, and custom post type from one dashboard. Find broken links, missing alt text, SEO gaps, heading issues, and more.
@@ -140,7 +140,7 @@ This plugin only reads your existing WordPress content. It does not send any dat
 
 1. Log in to your WordPress dashboard
 2. Go to **Plugins → Add New Plugin**
-3. Search for **AuditPilot – Smart Content Audit for WordPress**
+3. Search for **AuditPilot – Smart Content Audit**
 4. Click **Install Now**, then **Activate**
 
 **Manual Installation**
@@ -207,6 +207,14 @@ Yes. The plugin is fully internationalized and ships with a `.pot` template file
 
 == Changelog ==
 
+= 1.0.2 =
+* Security: hardened DROP TABLE statements against the SQL injection sniff by switching to `$wpdb->prepare()` with `%i` identifiers.
+* Performance: fixed an N+1 query in the content-score calculation — now a single grouped query instead of one query per category.
+* Added: Multisite compatibility — plugin tables are now created automatically for new sub-sites.
+* Added: accessible labels (`aria-label`) on the results search field and settings checkboxes.
+* Renamed the plugin to "AuditPilot – Smart Content Audit" to comply with WordPress.org trademark guidelines (removed "for WordPress" from the name).
+* Standards: corrected the readme license identifier to the SPDX form `GPL-2.0-or-later` and excluded the `.wordpress-org` directory from release builds.
+
 = 1.0.1 =
 * Increased minimum required PHP version to 8.1.
 * Internal code quality improvements: added automated linting (WordPress Coding Standards), static analysis (PHPStan), and test coverage to the development workflow. No user-facing behavior changes.
@@ -220,4 +228,4 @@ Yes. The plugin is fully internationalized and ships with a `.pot` template file
 Now requires PHP 8.1 or higher. If your host runs PHP 7.4–8.0, upgrade PHP before updating this plugin.
 
 = 1.0.0 =
-First release of AuditPilot – Smart Content Audit for WordPress. Install and run your first scan to discover content issues across your site.
+First release of AuditPilot – Smart Content Audit. Install and run your first scan to discover content issues across your site.

@@ -5,6 +5,7 @@
 .editorconfig
 .distignore
 .claude
+.wordpress-org
 node_modules
 vendor
 tests
