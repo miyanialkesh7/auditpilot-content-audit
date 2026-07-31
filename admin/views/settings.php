@@ -63,7 +63,7 @@ if ( isset( $_GET['updated'] ) && '1' === sanitize_key( wp_unslash( $_GET['updat
 						<fieldset>
 							<?php foreach ( $all_post_types as $pt_slug => $pt_obj ) : ?>
 							<label>
-								<input type="checkbox" name="post_types[]" value="<?php echo esc_attr( $pt_slug ); ?>"
+								<input type="checkbox" name="post_types[]" value="<?php echo esc_attr( $pt_slug ); ?>" aria-label="<?php echo esc_attr( $pt_obj->labels->singular_name ); ?>"
 									<?php checked( in_array( $pt_slug, (array) $settings['post_types'], true ) ); ?>>
 								<?php echo esc_html( $pt_obj->labels->singular_name ); ?>
 								<span class="description">(<?php echo esc_html( $pt_slug ); ?>)</span>
@@ -78,7 +78,7 @@ if ( isset( $_GET['updated'] ) && '1' === sanitize_key( wp_unslash( $_GET['updat
 						<fieldset>
 							<?php foreach ( $all_statuses as $status_slug => $status_label ) : ?>
 							<label>
-								<input type="checkbox" name="post_statuses[]" value="<?php echo esc_attr( $status_slug ); ?>"
+								<input type="checkbox" name="post_statuses[]" value="<?php echo esc_attr( $status_slug ); ?>" aria-label="<?php echo esc_attr( $status_label ); ?>"
 									<?php checked( in_array( $status_slug, (array) $settings['post_statuses'], true ) ); ?>>
 								<?php echo esc_html( $status_label ); ?>
 							</label><br>
@@ -99,7 +99,7 @@ if ( isset( $_GET['updated'] ) && '1' === sanitize_key( wp_unslash( $_GET['updat
 						<fieldset>
 							<?php foreach ( $all_audits as $audit_slug => $audit_label ) : ?>
 							<label>
-								<input type="checkbox" name="enabled_audits[]" value="<?php echo esc_attr( $audit_slug ); ?>"
+								<input type="checkbox" name="enabled_audits[]" value="<?php echo esc_attr( $audit_slug ); ?>" aria-label="<?php echo esc_attr( $audit_label ); ?>"
 									<?php checked( in_array( $audit_slug, (array) $settings['enabled_audits'], true ) ); ?>>
 								<?php echo esc_html( $audit_label ); ?>
 							</label><br>
@@ -161,7 +161,7 @@ if ( isset( $_GET['updated'] ) && '1' === sanitize_key( wp_unslash( $_GET['updat
 					<th scope="row"><?php esc_html_e( 'External Link Checking', 'auditpilot-content-audit' ); ?></th>
 					<td>
 						<label>
-							<input type="checkbox" name="check_external_links" value="1"
+							<input type="checkbox" name="check_external_links" value="1" aria-label="<?php esc_attr_e( 'Check external links for broken URLs', 'auditpilot-content-audit' ); ?>"
 								<?php checked( ! empty( $settings['check_external_links'] ) ); ?>>
 							<?php esc_html_e( 'Check external links for broken URLs', 'auditpilot-content-audit' ); ?>
 						</label>
@@ -181,7 +181,7 @@ if ( isset( $_GET['updated'] ) && '1' === sanitize_key( wp_unslash( $_GET['updat
 					<th scope="row"><?php esc_html_e( 'Remove Data on Deactivation', 'auditpilot-content-audit' ); ?></th>
 					<td>
 						<label>
-							<input type="checkbox" name="delete_on_deactivation" value="1"
+							<input type="checkbox" name="delete_on_deactivation" value="1" aria-label="<?php esc_attr_e( 'Delete all scan data (database tables) when the plugin is deactivated', 'auditpilot-content-audit' ); ?>"
 								<?php checked( ! empty( $settings['delete_on_deactivation'] ) ); ?>>
 							<?php esc_html_e( 'Delete all scan data (database tables) when the plugin is deactivated', 'auditpilot-content-audit' ); ?>
 						</label>

@@ -24,8 +24,8 @@ class APCA_Database {
 	public static function drop_tables() {
 		global $wpdb;
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
-		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}apca_issues" );
-		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}apca_scans" );
+		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $wpdb->prefix . 'apca_issues' ) );
+		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $wpdb->prefix . 'apca_scans' ) );
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.SchemaChange
 		delete_option( 'apca_db_version' );
 	}
@@ -385,23 +385,27 @@ class APCA_Database {
 		$categories = array( 'content', 'media', 'headings', 'links', 'seo', 'builder' );
 		$scores     = array();
 
+		$category_placeholders = implode( ', ', array_fill( 0, count( $categories ), '%s' ) );
+
+		// $category_placeholders is a fixed '%s, %s, ...' string with no user input; all values are still bound via prepare().
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT category, severity, COUNT(*) as cnt FROM {$wpdb->prefix}apca_issues WHERE scan_id = %d AND category IN ( {$category_placeholders} ) GROUP BY category, severity",
+				array_merge( array( $scan_id ), $categories )
+			)
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		$deductions_by_category = array_fill_keys( $categories, 0 );
+		foreach ( $rows as $row ) {
+			$weight = isset( $weights[ $row->severity ] ) ? $weights[ $row->severity ] : 1;
+			$deductions_by_category[ $row->category ] += (int) $row->cnt * $weight;
+		}
+
+		$max_deductions = $total_posts * 20;
 		foreach ( $categories as $category ) {
-			$rows = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT severity, COUNT(*) as cnt FROM {$wpdb->prefix}apca_issues WHERE scan_id = %d AND category = %s GROUP BY severity",
-					$scan_id,
-					$category
-				)
-			);
-
-			$deductions = 0;
-			foreach ( $rows as $row ) {
-				$weight      = isset( $weights[ $row->severity ] ) ? $weights[ $row->severity ] : 1;
-				$deductions += (int) $row->cnt * $weight;
-			}
-
-			$max_deductions      = $total_posts * 20;
-			$raw_score           = max( 0, 100 - ( $max_deductions > 0 ? ( $deductions / $max_deductions ) * 100 : 0 ) );
+			$raw_score           = max( 0, 100 - ( $max_deductions > 0 ? ( $deductions_by_category[ $category ] / $max_deductions ) * 100 : 0 ) );
 			$scores[ $category ] = (int) round( $raw_score );
 		}
 
