@@ -399,7 +399,7 @@ class APCA_Database {
 
 		$deductions_by_category = array_fill_keys( $categories, 0 );
 		foreach ( $rows as $row ) {
-			$weight = isset( $weights[ $row->severity ] ) ? $weights[ $row->severity ] : 1;
+			$weight                                    = isset( $weights[ $row->severity ] ) ? $weights[ $row->severity ] : 1;
 			$deductions_by_category[ $row->category ] += (int) $row->cnt * $weight;
 		}
 
